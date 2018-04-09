@@ -1,43 +1,45 @@
 <template>
   <div>
-    <el-row :gutter="20">
-
-      <el-form :model="formInline" label-width="90px" class="demo-form-inline" ref="formInline">
-        <el-col :span="11">
-          <el-form-item class="search-inputType">
-            <el-input placeholder="订单编号/合同编号" v-model.trim="formInline.inputName">
-              <el-select v-model="formInline.inputType" slot="prepend">
-                <el-option label="订单编号" value="1"></el-option>
-                <el-option label="合同编号" value="2"></el-option>
+    <el-row class="m-t-20 m-r-20 m-l-20" :gutter="0">
+      <el-form :model="formInline" label-width="90px" :inline="true" class="demo-form-inline" ref="formInline">
+        <el-col :span="6">
+          <el-form-item class="search-inputType" prop="classes">
+            <el-input placeholder="班级" v-model.trim="formInline.classes">
+              <el-select v-model="formInline.major" slot="prepend">
+                <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
               </el-select>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="11">
-          <el-form-item label="客户名称" prop="custName">
-            <el-input v-model.trim="formInline.custName" placeholder="请输入客户名称"></el-input>
+        <el-col :span="6">
+          <el-form-item label="学生姓名" prop="s_name">
+            <el-input v-model.trim="formInline.s_name" placeholder="请输入学生姓名"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <el-button type="primary" @click="getData">搜索</el-button>
+            <el-button @click="resetForm('formInline')">重置</el-button>
           </el-form-item>
         </el-col>
       </el-form>
     </el-row>
-
-    <el-row :gutter="20">
+    <el-row class="m-r-20 m-l-20" :gutter="0">
       <el-col :span="24">
-        <div class="ew-content">
-          <!--表格标题-->
-          <el-table :data="tableData" border style="width: 100%">
-            <el-table-column prop="date" label="日期" width="180">
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="180">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column>
-          </el-table>
-          <!--尾部工具栏-->
-          <div class="ew-block">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
-            </el-pagination>
-          </div>
+        <!--表格标题-->
+        <el-table stripe :data="tableData" border style="width: 100%">
+          <el-table-column prop="date" label="日期" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="姓名" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="地址">
+          </el-table-column>
+        </el-table>
+        <!--尾部工具栏-->
+        <div class="m-t-20">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
+          </el-pagination>
         </div>
       </el-col>
     </el-row>
@@ -51,9 +53,11 @@ export default {
   data() {
     return {
       formInline: {
-        inputName: '',
-        inputType: ''
+        major: '',
+        classes: '',
+        s_name: ''
       },
+      options: [], // 专业
       tableData: [
         {
           date: '2016-05-02',
@@ -84,14 +88,10 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      this.$message('submit!')
-    },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
+    getData() {},
+    resetForm(formName) {
+      this.formInline.major = ''
+      this.$refs[formName].resetFields()
     },
     // 分页操作
     handleCurrentChange(val) {
@@ -108,20 +108,35 @@ export default {
     getMajorList() {
       getmajor()
         .then(response => {
-          console.log(response)
+          this.options = response.result
         })
         .catch(err => {
           console.log(err)
         })
     }
   },
-  mounted: function() {
+  mounted: function() {},
+  created: function() {
     this.getMajorList()
   }
 }
 </script>
 
 <style scoped>
-
+.m-t-20 {
+  margin-top: 20px;
+}
+.m-r-20 {
+  margin-right: 20px;
+}
+.m-l-20 {
+  margin-left: 20px;
+}
+.m-b-20 {
+  margin-bottom: 20px;
+}
+.el-input .el-select {
+  width: 130px;
+}
 </style>
 

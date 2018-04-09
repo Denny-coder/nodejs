@@ -8,6 +8,7 @@ router.post('/info/setInfo', function(req, res) {
   const l_id = req.body.l_id
   const fullname = req.body.fullname
   const sex = req.body.sex
+  const nation = req.body.nation
   const age = req.body.age
   const schoolnum = req.body.schoolnum
   const major = req.body.major
@@ -33,6 +34,10 @@ router.post('/info/setInfo', function(req, res) {
   }
   if (!age) {
     res.send({ code: 600, msg: '年龄 不能为空！' })
+    return
+  }
+  if (!nation) {
+    res.send({ code: 600, msg: '民族 不能为空！' })
     return
   }
   if (!schoolnum) {
@@ -67,14 +72,6 @@ router.post('/info/setInfo', function(req, res) {
     res.send({ code: 600, msg: '籍贯 不能为空！' })
     return
   }
-  if (!f_phone) {
-    res.send({ code: 600, msg: '父亲手机号 不能为空！' })
-    return
-  }
-  if (!m_phone) {
-    res.send({ code: 600, msg: '母亲手机号 不能为空！' })
-    return
-  }
   db.Info.findOne({ l_id: l_id }, function(err, doc) {
     console.log(doc)
     if (err) {
@@ -92,6 +89,7 @@ router.post('/info/setInfo', function(req, res) {
             fullname: fullname, // 姓名
             sex: sex, // 性别
             age: age, // 年龄
+            nation: nation, // 年龄
             schoolnum: schoolnum, // 校号
             major: major, // 专业
             classes: classes, // 班级
@@ -128,19 +126,22 @@ router.post('/info/getInfo', function(req, res) {
         res.send({
           code: 200,
           msg: '',
-          fullname: doc.fullname, // 姓名
-          sex: doc.sex, // 性别
-          age: doc.age, // 年龄
-          schoolnum: doc.schoolnum, // 校号
-          major: doc.major, // 专业
-          classes: doc.classes, // 班级
-          phone: doc.phone, // 手机号
-          email: doc.email, // 邮箱
-          idcard: doc.idcard, // 身份证号
-          birthday: doc.birthday, // 生日
-          origin: doc.origin, // 籍贯
-          f_phone: doc.f_phone, // 父亲手机号
-          m_phone: doc.m_phone, // 母亲手机号
+          result: {
+            fullname: doc.fullname, // 姓名
+            sex: doc.sex, // 性别
+            age: doc.age, // 年龄
+            nation: doc.nation, // 年龄
+            schoolnum: doc.schoolnum, // 校号
+            major: doc.major, // 专业
+            classes: doc.classes, // 班级
+            phone: doc.phone, // 手机号
+            email: doc.email, // 邮箱
+            idcard: doc.idcard, // 身份证号
+            birthday: doc.birthday, // 生日
+            origin: doc.origin, // 籍贯
+            f_phone: doc.f_phone, // 父亲手机号
+            m_phone: doc.m_phone // 母亲手机号
+          },
           has: 1 // 是否填写
         })
         return
@@ -148,7 +149,8 @@ router.post('/info/getInfo', function(req, res) {
         res.send({
           code: 200,
           msg: '',
-          has: 0 //
+          has: 0,
+          result: {} //
         })
       }
     }
