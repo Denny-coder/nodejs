@@ -7,7 +7,6 @@ router.post('/info/setInfo', function(req, res) {
   // 对发来的注册数据进行验证
   const l_id = req.body.l_id
   const fullname = req.body.fullname
-  const nation = req.body.nation
   const sex = req.body.sex
   const age = req.body.age
   const schoolnum = req.body.schoolnum
@@ -34,10 +33,6 @@ router.post('/info/setInfo', function(req, res) {
   }
   if (!age) {
     res.send({ code: 600, msg: '年龄 不能为空！' })
-    return
-  }
-  if (!nation) {
-    res.send({ code: 600, msg: '民族 不能为空！' })
     return
   }
   if (!schoolnum) {
@@ -96,7 +91,6 @@ router.post('/info/setInfo', function(req, res) {
             l_id: l_id, // 登录id
             fullname: fullname, // 姓名
             sex: sex, // 性别
-            nation: nation, // 性别
             age: age, // 年龄
             schoolnum: schoolnum, // 校号
             major: major, // 专业
@@ -134,24 +128,20 @@ router.post('/info/getInfo', function(req, res) {
         res.send({
           code: 200,
           msg: '',
-          result: {
-            fullname: doc.fullname, // 姓名
-            sex: doc.sex, // 性别
-            age: doc.age, // 年龄
-            nation: doc.nation, // 民族
-            schoolnum: doc.schoolnum, // 校号
-            major: doc.major, // 专业
-            classes: doc.classes, // 班级
-            phone: doc.phone, // 手机号
-            email: doc.email, // 邮箱
-            idcard: doc.idcard, // 身份证号
-            birthday: doc.birthday, // 生日
-            origin: doc.origin, // 籍贯
-            f_phone: doc.f_phone, // 父亲手机号
-            m_phone: doc.m_phone, // 母亲手机号
-            isedit: doc.isedit, // 是否可编辑
-            has: 1 // 是否填写}
-          }
+          fullname: doc.fullname, // 姓名
+          sex: doc.sex, // 性别
+          age: doc.age, // 年龄
+          schoolnum: doc.schoolnum, // 校号
+          major: doc.major, // 专业
+          classes: doc.classes, // 班级
+          phone: doc.phone, // 手机号
+          email: doc.email, // 邮箱
+          idcard: doc.idcard, // 身份证号
+          birthday: doc.birthday, // 生日
+          origin: doc.origin, // 籍贯
+          f_phone: doc.f_phone, // 父亲手机号
+          m_phone: doc.m_phone, // 母亲手机号
+          has: 1 // 是否填写
         })
         return
       } else {

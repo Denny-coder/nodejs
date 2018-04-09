@@ -22,12 +22,6 @@
             </el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="民族：">
-          <el-col :span="12">
-            <el-input v-model="form.nation">
-            </el-input>
-          </el-col>
-        </el-form-item>
         <el-form-item label="校号：">
           <el-col :span="12">
             <el-input v-model="form.schoolnum">
@@ -109,7 +103,6 @@ export default {
         fullname: '', // 姓名
         sex: '', // 性别
         age: '', // 年龄
-        nation: '', // 民族
         schoolnum: '', // 校号
         major: '', // 专业
         classes: '', // 班级
@@ -130,12 +123,7 @@ export default {
       console.log(this.form)
       setInfo(this.form)
         .then(response => {
-          if (response.code === 200) {
-            this.$message({
-              message: 'response.msg',
-              type: 'success'
-            })
-          }
+          console.log(response)
         })
         .catch(err => {
           console.log(err)
@@ -154,7 +142,7 @@ export default {
   mounted: function() {
     getInfo(this.l_id)
       .then(response => {
-        this.form = response.result
+        this.form = response
       })
       .catch(err => {
         console.log(err)

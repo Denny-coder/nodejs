@@ -8,7 +8,6 @@ export function setInfo(params) {
       l_id: params.l_id, // 登录id
       fullname: params.fullname, // 姓名
       sex: params.sex, // 性别
-      nation: params.nation, // 性别
       age: params.age, // 年龄
       schoolnum: params.schoolnum, // 校号
       major: params.major, // 专业

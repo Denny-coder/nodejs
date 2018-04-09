@@ -62,7 +62,6 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      console.log(this.$store)
       getList(this.listQuery).then(response => {
         this.list = response.data.items
         this.listLoading = false

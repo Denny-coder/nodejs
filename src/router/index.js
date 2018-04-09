@@ -56,7 +56,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: '成绩管理', icon: 'example' },
+    meta: { title: '成绩管理', icon: 'example', roles: ['student'] },
     children: [
       {
         path: 'table',
@@ -72,10 +72,10 @@ export const asyncRouterMap = [
       }
     ]
   },
-
   {
     path: '/form',
     component: Layout,
+    meta: { roles: ['student'] },
     children: [
       {
         path: 'index',
@@ -94,13 +94,14 @@ export const asyncRouterMap = [
         path: 'index',
         name: 'Authority',
         component: () => import('@/views/authority/index'),
-        meta: { title: '权限管理', icon: 'form', roles: ['admin'] }
+        meta: { title: '权限管理', icon: 'form' }
       }
     ]
   },
   {
     path: '/class',
     component: Layout,
+    meta: { roles: ['teach'] },
     children: [
       {
         path: 'index',
@@ -113,6 +114,7 @@ export const asyncRouterMap = [
   {
     path: '/info',
     component: Layout,
+    meta: { roles: ['student'] },
     children: [
       {
         path: 'index',

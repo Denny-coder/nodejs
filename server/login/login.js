@@ -20,7 +20,7 @@ router.get('/user/login', function(req, res) {
     res.send({ code: 600, msg: 'pwd 不能为空！' })
     return
   }
-  db.logins.findOne({ name: req.query.name, pwd: req.query.pwd }, function(
+  db.Login.findOne({ name: req.query.name, pwd: req.query.pwd }, function(
     err,
     doc
   ) {
@@ -44,7 +44,7 @@ router.get('/user/login', function(req, res) {
               token: doc.token,
               name: doc.name,
               roles: doc.roles,
-              l_id: doc._id
+              l_id: doc._id,
             }
           })
           return
@@ -61,7 +61,7 @@ router.get('/user/info', function(req, res) {
     res.send({ code: 600, msg: 'token 验证失败' })
     return
   }
-  db.logins.findOne({ token: req.query.token }, function(err, doc) {
+  db.Login.findOne({ token: req.query.token }, function(err, doc) {
     if (err) {
       console.log('查询出错：' + err)
       res.send({ code: 700, msg: '查询出错：' + err })
@@ -98,7 +98,7 @@ router.post('/user/register', function(req, res) {
   }
   // 查询数据库验证注册账号、密码
   // 是否存在账号
-  db.logins.findOne({ name: req.body.name }, function(err, doc) {
+  db.Login.findOne({ name: req.body.name }, function(err, doc) {
     if (err) {
       console.log('查询出错：' + err)
       res.send({ code: 700, msg: '查询出错：' + err })
@@ -108,18 +108,19 @@ router.post('/user/register', function(req, res) {
         res.send({ code: 700, msg: '该用户名名已经被注册：' + name })
         return
       } else {
-        db.logins.create({
-          name: name,
-          pwd: pwd
-        },
-        function(err, doc) {
-          if (err) {
-            res.end('注册失败:' + err)
-          } else {
-            res.send({ code: 200, msg: '用户注册成功：' + name })
-            return
+        db.Login.create(
+          {
+            name: name,
+            pwd: pwd
+          },
+          function(err, doc) {
+            if (err) {
+              res.end('注册失败:' + err)
+            } else {
+              res.send({ code: 200, msg: '用户注册成功：' + name })
+              return
+            }
           }
-        }
         )
       }
     }
