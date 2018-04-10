@@ -94,7 +94,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item>
-            <el-button v-if="isShow" type="primary" @click="onSubmit">保存</el-button>
+            <el-button v-if="isShow&&has==='0'" type="primary" @click="onSubmit">保存</el-button>
+            <el-button v-if="isShow&&is_edit==='1'" type="primary" @click="onSubmitUpdate">保存</el-button>
             <el-button v-if="has===0" @click="resetForm('form')">重置</el-button>
             <el-button v-if="has===1&&isShow" @click="isShow=false">取消</el-button>
             <el-button v-if="!isShow&&is_edit==='1'" type="primary" @click="isShow=true">编辑</el-button>
@@ -106,7 +107,7 @@
 </template>
 
 <script>
-import { setInfo, getInfo } from '@/api/student'
+import { setInfo, getInfo, updateStuInfo } from '@/api/student'
 import { getmajor } from '@/api/enum'
 import { Message } from 'element-ui'
 
@@ -182,6 +183,25 @@ export default {
         }
       })
     },
+    onSubmitUpdate: function() {
+      this.$refs['form'].validate(valid => {
+        this.form.l_id = this.l_id
+        if (valid) {
+          updateStuInfo(this.form)
+            .then(response => {
+              Message({
+                message: response.msg,
+                type: 'success',
+                duration: 5 * 1000
+              })
+              this.isShow = false
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
+      })
+    },
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
@@ -229,6 +249,8 @@ export default {
 .el-select {
   width: 100%;
 }
-[v-cloak] { display: none }
+[v-cloak] {
+  display: none;
+}
 </style>
 

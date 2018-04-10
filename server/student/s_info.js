@@ -155,15 +155,114 @@ router.post('/info/changeEdit', function(req, res) {
   const ids = req.body.ids
   const is_edit = req.body.is_edit
   for (const key of ids) {
-    try {
-      console.log(key)
-      console.log(is_edit)
-      db.S_info.update({ l_id: key }, { $set: { 'is_edit': is_edit }})
-    } catch (e) {
-      console.log(e)
-    }
+    db.S_info.update({ l_id: key }, { $set: { is_edit: is_edit }}, function(
+      err,
+      result
+    ) {
+      if (err) {
+        console.log(err)
+      }
+      console.log(result)
+    })
   }
-  res.send({ code: 200, msg: '修改成功', result: {}}) //
+  res.send({ code: 200, msg: '修改成功', result: {}})
+})
+router.post('/info/updateStuInfo', function(req, res) {
+  // 对发来的注册数据进行验证
+  const l_id = req.body.l_id
+  const fullname = req.body.fullname
+  const sex = req.body.sex
+  const nation = req.body.nation
+  const age = req.body.age
+  const schoolnum = req.body.schoolnum
+  const major = req.body.major
+  const classes = req.body.classes
+  const phone = req.body.phone
+  const email = req.body.email
+  const idcard = req.body.idcard
+  const birthday = req.body.birthday
+  const origin = req.body.origin
+  const f_phone = req.body.f_phone
+  const m_phone = req.body.m_phone
+  if (!l_id) {
+    res.send({ code: 600, msg: '用户 ID 不能为空' })
+    return
+  }
+  if (!fullname) {
+    res.send({ code: 600, msg: '姓名 不能为空！' })
+    return
+  }
+  if (!sex) {
+    res.send({ code: 600, msg: '性别 不能为空！' })
+    return
+  }
+  if (!age) {
+    res.send({ code: 600, msg: '年龄 不能为空！' })
+    return
+  }
+  if (!nation) {
+    res.send({ code: 600, msg: '民族 不能为空！' })
+    return
+  }
+  if (!schoolnum) {
+    res.send({ code: 600, msg: '校号 不能为空！' })
+    return
+  }
+  if (!major) {
+    res.send({ code: 600, msg: '专业 不能为空！' })
+    return
+  }
+  if (!classes) {
+    res.send({ code: 600, msg: '班级 不能为空！' })
+    return
+  }
+  if (!phone) {
+    res.send({ code: 600, msg: '手机号 不能为空！' })
+    return
+  }
+  if (!email) {
+    res.send({ code: 600, msg: '邮箱 不能为空！' })
+    return
+  }
+  if (!idcard) {
+    res.send({ code: 600, msg: '身份证号 不能为空！' })
+    return
+  }
+  if (!birthday) {
+    res.send({ code: 600, msg: 'pwd 不能为空！' })
+    return
+  }
+  if (!origin) {
+    res.send({ code: 600, msg: '籍贯 不能为空！' })
+    return
+  }
+  db.S_info.update(
+    { l_id: l_id },
+    {
+      $set: {
+        fullname: fullname, // 姓名
+        sex: sex, // 性别
+        age: age, // 年龄
+        nation: nation, // 年龄
+        schoolnum: schoolnum, // 校号
+        major: major, // 专业
+        classes: classes, // 班级
+        phone: phone, // 手机号
+        email: email, // 邮箱
+        idcard: idcard, // 身份证号
+        birthday: birthday, // 生日
+        origin: origin, // 籍贯
+        f_phone: f_phone, // 父亲手机号
+        m_phone: m_phone // 母亲手机号
+      }
+    },
+    function(err, result) {
+      if (err) {
+        res.send({ code: 504, msg: '修改失败', result: {}})
+      }
+      res.send({ code: 200, msg: '修改成功', result: {}})
+    }
+  )
 })
 
 module.exports = router
