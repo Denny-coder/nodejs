@@ -44,7 +44,7 @@ router.get('/user/login', function(req, res) {
               token: doc.token,
               name: doc.name,
               roles: doc.roles,
-              l_id: doc._id,
+              l_id: doc._id
             }
           })
           return

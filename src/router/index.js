@@ -112,6 +112,19 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/teachinfo',
+    component: Layout,
+    meta: { roles: ['teach'] },
+    children: [
+      {
+        path: 'index',
+        name: 'teachInfo',
+        component: () => import('@/views/teachinfo/index'),
+        meta: { title: '个人信息', icon: 'form' }
+      }
+    ]
+  },
+  {
     path: '/info',
     component: Layout,
     meta: { roles: ['student'] },
@@ -124,6 +137,5 @@ export const asyncRouterMap = [
       }
     ]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]

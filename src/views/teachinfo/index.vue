@@ -36,10 +36,10 @@
             </el-select>
             <span v-show="!isShow" v-text="form.major===1?'网络工程':'信息管理'"></span>
           </el-form-item>
-          <el-form-item label="校号：" prop="schoolnum">
-            <el-input v-show="isShow" v-model="form.schoolnum">
+          <el-form-item label="工号：" prop="worknum">
+            <el-input v-show="isShow" v-model="form.worknum">
             </el-input>
-            <span v-show="!isShow" v-text="form.schoolnum"></span>
+            <span v-show="!isShow" v-text="form.worknum"></span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -79,25 +79,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="母亲联系方式：" prop="m_phone">
-            <el-input v-show="isShow" v-model="form.m_phone">
-            </el-input>
-            <span v-show="!isShow" v-text="form.m_phone"></span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="父亲联系方式：" prop="f_phone">
-            <el-input v-show="isShow" v-model="form.f_phone">
-            </el-input>
-            <span v-show="!isShow" v-text="form.f_phone"></span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item>
             <el-button v-if="isShow" type="primary" @click="onSubmit">保存</el-button>
-            <el-button v-if="has===0" @click="resetForm('form')">重置</el-button>
-            <el-button v-if="has===1&&isShow" @click="isShow=false">取消</el-button>
-            <el-button v-if="!isShow&&is_edit==='1'" type="primary" @click="isShow=true">编辑</el-button>
+            <el-button v-if="!has" @click="resetForm('form')">重置</el-button>
+            <el-button v-if="!isShow&&has" type="primary" @click="isShow=true">编辑</el-button>
+            <el-button v-if="isShow&&has" @click="isShow=false">取消</el-button>
           </el-form-item>
         </el-col>
       </el-form>
@@ -106,7 +92,7 @@
 </template>
 
 <script>
-import { setInfo, getInfo } from '@/api/student'
+import { setTeachInfo, getTeachInfo } from '@/api/teach'
 import { getmajor } from '@/api/enum'
 import { Message } from 'element-ui'
 
@@ -124,16 +110,14 @@ export default {
         sex: '', // 性别
         nation: '', // 民族
         age: '', // 年龄
-        schoolnum: '', // 校号
+        worknum: '', // 校号
         major: '', // 专业
         classes: '', // 班级
         phone: '', // 手机号
         email: '', // 邮箱
         idcard: '', // 身份证号
         birthday: '', // 生日
-        origin: '', // 籍贯
-        f_phone: '', // 父亲手机号
-        m_phone: '' // 母亲手机号
+        origin: '' // 籍贯
       },
       rules: {
         sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
@@ -155,8 +139,8 @@ export default {
         origin: [{ required: true, message: '请填写籍贯', trigger: 'blur' }],
         age: [{ required: true, message: '请填写年龄', trigger: 'blur' }],
         classes: [{ required: true, message: '请填写班级', trigger: 'blur' }],
-        schoolnum: [
-          { required: true, message: '请填写校号', trigger: 'blur' },
+        worknum: [
+          { required: true, message: '请填写工号', trigger: 'blur' },
           { min: 7, max: 11, message: '长度在 7 到 11 个字符', trigger: 'blur' }
         ]
       }
@@ -167,7 +151,7 @@ export default {
       this.$refs['form'].validate(valid => {
         this.form.l_id = this.l_id
         if (valid) {
-          setInfo(this.form)
+          setTeachInfo(this.form)
             .then(response => {
               Message({
                 message: response.msg,
@@ -195,12 +179,12 @@ export default {
         })
     },
     getInfomation() {
-      getInfo(this.l_id)
+      getTeachInfo(this.l_id)
         .then(response => {
-          if (response.result.has === 1) {
+          if (response.result.has) {
             this.form = response.result
             this.has = response.result.has
-            this.is_edit = response.result.is_edit
+            // this.is_edit = response.result.is_edit
             this.isShow = false
           } else {
             this.isShow = true
@@ -229,6 +213,8 @@ export default {
 .el-select {
   width: 100%;
 }
-[v-cloak] { display: none }
+[v-cloak] {
+  display: none;
+}
 </style>
 

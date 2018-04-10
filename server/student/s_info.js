@@ -72,10 +72,8 @@ router.post('/info/setInfo', function(req, res) {
     res.send({ code: 600, msg: '籍贯 不能为空！' })
     return
   }
-  db.Info.findOne({ l_id: l_id }, function(err, doc) {
-    console.log(doc)
+  db.S_info.findOne({ l_id: l_id }, function(err, doc) {
     if (err) {
-      console.log('查询出错：' + err)
       res.send({ code: 700, msg: '查询出错：' + err })
       return
     } else {
@@ -83,7 +81,7 @@ router.post('/info/setInfo', function(req, res) {
         res.send({ code: 700, msg: '该用户已填写个人信息，请勿重复填写！' })
         return
       } else {
-        db.Info.create(
+        db.S_info.create(
           {
             l_id: l_id, // 登录id
             fullname: fullname, // 姓名
@@ -117,7 +115,7 @@ router.post('/info/setInfo', function(req, res) {
 router.post('/info/getInfo', function(req, res) {
   // 对发来的注册数据进行验证
   const l_id = req.body.l_id
-  db.Info.findOne({ l_id: l_id }, function(err, doc) {
+  db.S_info.findOne({ l_id: l_id }, function(err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
@@ -140,20 +138,32 @@ router.post('/info/getInfo', function(req, res) {
             birthday: doc.birthday, // 生日
             origin: doc.origin, // 籍贯
             f_phone: doc.f_phone, // 父亲手机号
-            m_phone: doc.m_phone // 母亲手机号
-          },
-          has: 1 // 是否填写
+            m_phone: doc.m_phone, // 母亲手机号
+            is_edit: doc.is_edit, // 母亲手机号
+            has: 1 // 是否填写
+          }
         })
         return
       } else {
-        res.send({
-          code: 200,
-          msg: '',
-          has: 0,
-          result: {} //
-        })
+        res.send({ code: 200, msg: '', has: 0, result: {}}) //
       }
     }
   })
 })
+router.post('/info/changeEdit', function(req, res) {
+  // 对发来的注册数据进行验证
+  const ids = req.body.ids
+  const is_edit = req.body.is_edit
+  for (const key of ids) {
+    try {
+      console.log(key)
+      console.log(is_edit)
+      db.S_info.update({ l_id: key }, { $set: { 'is_edit': is_edit }})
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  res.send({ code: 200, msg: '修改成功', result: {}}) //
+})
+
 module.exports = router

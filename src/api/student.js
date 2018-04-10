@@ -32,3 +32,18 @@ export function getInfo(params) {
     }
   })
 }
+
+export function getStudentList(params) {
+  return request({
+    url: '/api/list/getstudent',
+    method: 'post',
+    data: {
+      major: params.major,
+      classes: params.classes,
+      s_name: params.s_name,
+      pageNum: params.pageNum,
+      schoolnum: params.schoolnum,
+      pageSize: params.pageSize
+    }
+  })
+}
