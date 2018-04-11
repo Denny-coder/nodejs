@@ -71,4 +71,26 @@ router.post('/list/getstudent', function(req, res) {
   })
 })
 
+router.post('/list/delStudent', function(req, res) {
+  const l_id = req.body.l_id
+  db.S_info.deleteOne({ l_id: l_id }, function(err, doc) {
+    if (err) {
+      res.send({ code: 700, msg: '删除失败：' + err })
+      return
+    } else {
+      db.Login.deleteOne({ _id: l_id }, function(err, doc) {
+        if (err) {
+          res.send({ code: 700, msg: '删除失败：' + err })
+          return
+        } else {
+          res.send({
+            code: 200,
+            msg: '删除成功',
+            result: {}
+          })
+        }
+      })
+    }
+  })
+})
 module.exports = router

@@ -1,85 +1,200 @@
 <template>
-  <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai"></el-option>
-          <el-option label="Zone two" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
+  <div>
+    <el-row class="m-t-20 m-r-20 m-l-20" :gutter="0">
+      <el-form :model="formInline" label-width="90px" :inline="true" class="demo-form-inline" ref="formInline">
+        <el-col :span="6">
+          <el-form-item class="search-inputType" prop="classes">
+            <el-input placeholder="班级" v-model.trim="formInline.classes">
+              <el-select v-model="formInline.major" slot="prepend">
+                <el-option label="请选择专业" value="">
+                </el-option>
+                <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-input>
+          </el-form-item>
         </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-time-picker type="fixed-time" placeholder="Pick a time" v-model="form.date2" style="width: 100%;"></el-time-picker>
+        <el-col :span="6">
+          <el-form-item label="学生姓名" prop="s_name">
+            <el-input v-model.trim="formInline.t_name" placeholder="请输入学生姓名"></el-input>
+          </el-form-item>
         </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery"></el-switch>
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type"></el-checkbox>
-          <el-checkbox label="Promotion activities" name="type"></el-checkbox>
-          <el-checkbox label="Offline activities" name="type"></el-checkbox>
-          <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor"></el-radio>
-          <el-radio label="Venue"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input type="textarea" v-model="form.desc"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
+        <el-col :span="6">
+          <el-form-item label="校号" prop="schoolnum">
+            <el-input v-model.trim="formInline.worknum" placeholder="请输入学生校号"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="primary" @click="getData">搜索</el-button>
+            <el-button @click="resetForm('formInline')">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
+    <el-row class="m-r-20 m-l-20" :gutter="0">
+      <el-col :span="24">
+        <!--表格标题-->
+        <el-table stripe :data="tableData" border style="width: 100%">
+          <!-- <el-table-column type="selection" width="55"> -->
+          <!-- </el-table-column> -->
+          <el-table-column prop="fullname" label="姓名" width="180">
+          </el-table-column>
+          <el-table-column prop="worknum" label="校号" width="180">
+          </el-table-column>
+          <el-table-column prop="major" label="所在专业">
+            <template slot-scope="scope">
+              <span v-text="scope.row.major==='1'?'网络工程':'信息管理'"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="classes" label="所带班级">
+          </el-table-column>
+          <el-table-column prop="phone" label="手机号">
+          </el-table-column>
+          <el-table-column prop="email" label="邮箱">
+          </el-table-column>
+          <el-table-column prop="age" label="年龄">
+            <template slot-scope="scope">
+              <span v-text="scope.row.age+'岁'"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="age" label="操作">
+            <template slot-scope="scope">
+              <el-button type="danger" @click="dialogVisible=true,deletId=scope.row.l_id" plain>删 除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!--尾部工具栏-->
+        <div class="m-t-20">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+          </el-pagination>
+        </div>
+      </el-col>
+    </el-row>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <span>确认删除？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="del">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getmajor } from '@/api/enum'
+import { getTeachList, delTeach } from '@/api/teach'
+import { mapGetters } from 'vuex'
+import { Message } from 'element-ui'
+
 export default {
   data() {
     return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+      formInline: {
+        major: '',
+        classes: '',
+        worknum: '',
+        t_name: ''
+      },
+      options: [], // 专业
+      sels: [], // 专业
+      tableData: [],
+      disabled: false,
+      dialogVisible: false,
+      deletId: '',
+      is_edit: '1', // 是否可编辑
+      totalCount: 0, // 分页操作
+      pageNum: 1, // 页数
+      pageSize: 5 // 每页条数
     }
   },
   methods: {
-    onSubmit() {
-      this.$message('submit!')
+    getData() {
+      const param = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+        ...this.formInline
+      }
+      getTeachList(param)
+        .then(response => {
+          this.totalCount = response.totalCount
+          this.tableData = response.result
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
+    del: function() {
+      delTeach({ l_id: this.deletId })
+        .then(response => {
+          Message({
+            message: response.msg,
+            type: 'success',
+            duration: 5 * 1000
+          })
+          this.dialogVisible = false
+          this.getData()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    resetForm(formName) {
+      this.pageNum = 1 // 页数
+      this.pageSize = 5 // 每页条数
+      this.formInline.major = ''
+      this.$refs[formName].resetFields()
+      this.getData()
+    },
+    // 分页操作
+    handleCurrentChange(val) {
+      this.pageNum = val
+      this.getData()
+    },
+    // 每页显示的条数
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getData()
+    },
+    // handleSelectionChange(val) {
+    //   this.sels = val
+    // },
+    getMajorList() {
+      getmajor()
+        .then(response => {
+          this.options = response.result
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  mounted: function() {},
+  created: function() {
+    this.getMajorList()
+    this.getData()
+  },
+  computed: {
+    ...mapGetters(['l_id'])
   }
 }
 </script>
 
 <style scoped>
-.line{
-  text-align: center;
+.m-t-20 {
+  margin-top: 20px;
+}
+.m-r-20 {
+  margin-right: 20px;
+}
+.m-l-20 {
+  margin-left: 20px;
+}
+.m-b-20 {
+  margin-bottom: 20px;
+}
+.el-input .el-select {
+  width: 130px;
 }
 </style>
 

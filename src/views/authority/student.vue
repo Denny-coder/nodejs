@@ -6,7 +6,7 @@
           <el-form-item class="search-inputType" prop="classes">
             <el-input placeholder="班级" v-model.trim="formInline.classes">
               <el-select v-model="formInline.major" slot="prepend">
-                <el-option  label="请选择专业"  value="">
+                <el-option label="请选择专业" value="">
                 </el-option>
                 <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
@@ -34,13 +34,13 @@
     </el-row>
     <el-row class="m-r-20 m-l-20" :gutter="0">
       <el-col :span="6" class="m-b-20">
-        <el-button type="info" @click="changeBtn">修改权限</el-button>
+        <el-button type="primary" plain @click="dialogVisible=true">添加学生</el-button>
       </el-col>
       <el-col :span="24">
         <!--表格标题-->
         <el-table stripe :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55">
-          </el-table-column>
+          <!-- <el-table-column type="selection" width="55">
+          </el-table-column> -->
           <el-table-column prop="fullname" label="姓名" width="180">
           </el-table-column>
           <el-table-column prop="schoolnum" label="校号" width="180">
@@ -61,6 +61,11 @@
               <span v-text="scope.row.age+'岁'"></span>
             </template>
           </el-table-column>
+          <el-table-column prop="age" label="年龄">
+            <template slot-scope="scope">
+              <el-button type="danger" @click="dialogVisibleDel=true,deletId=scope.row.l_id" plain>删 除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <!--尾部工具栏-->
         <div class="m-t-20">
@@ -69,12 +74,32 @@
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-      <el-radio v-model="is_edit" label="1">可编辑</el-radio>
-      <el-radio v-model="is_edit" label="0">不可编辑</el-radio>
+    <el-dialog title="提示" :visible.sync="dialogVisibleDel" width="30%">
+      <span>确认删除？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleDel = false">取 消</el-button>
+        <el-button type="primary" @click="del">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="校号">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="form.pwd"></el-input>
+        </el-form-item>
+        <el-form-item label="角色">
+          <el-radio-group v-model="form.roles">
+            <el-radio label="student">学生</el-radio>
+            <el-radio label="teach">教师</el-radio>
+            <el-radio label="admin">管理员</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="changeEdit">确 定</el-button>
+        <el-button type="primary" @click="addStudent">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -82,8 +107,8 @@
 
 <script>
 import { getmajor } from '@/api/enum'
-import { getStudentList } from '@/api/student'
-import { changeEdit } from '@/api/teach'
+import { getStudentList, delStudent } from '@/api/student'
+import { register } from '@/api/login'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 
@@ -96,11 +121,18 @@ export default {
         schoolnum: '',
         s_name: ''
       },
+      form: {
+        roles: 'student',
+        name: '',
+        pwd: ''
+      },
       options: [], // 专业
       sels: [], // 专业
       tableData: [],
       disabled: false,
       dialogVisible: false,
+      dialogVisibleDel: false,
+      deletId: '',
       is_edit: '1', // 是否可编辑
       totalCount: 0, // 分页操作
       pageNum: 1, // 页数
@@ -123,32 +155,32 @@ export default {
           console.log(err)
         })
     },
-    changeBtn: function() {
-      if (this.sels.length <= 0) {
-        Message({
-          message: '请选择至少一条数据',
-          type: 'warning',
-          duration: 5 * 1000
-        })
-      } else {
-        this.dialogVisible = true
-      }
-    },
-    // 改变权限
-    changeEdit: function() {
-      var arr = []
-      for (const key of this.sels) {
-        arr.push(key.l_id)
-      }
-      changeEdit({ ids: arr, is_edit: this.is_edit })
+    del() {
+      delStudent({ l_id: this.deletId })
         .then(response => {
           Message({
             message: response.msg,
             type: 'success',
             duration: 5 * 1000
           })
+          this.dialogVisibleDel = false
+          this.getData()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // 添加学生
+    addStudent: function() {
+      this.form.roles = this.form.roles.split(',')
+      register(this.form)
+        .then(response => {
+          Message({
+            message: response.msg + '请告知学生',
+            type: 'success',
+            duration: 5 * 1000
+          })
           this.dialogVisible = false
-          this.is_edit = '1'
         })
         .catch(err => {
           console.log(err)

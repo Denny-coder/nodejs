@@ -47,6 +47,15 @@ export function getStudentList(params) {
     }
   })
 }
+export function delStudent(params) {
+  return request({
+    url: '/api/list/delStudent',
+    method: 'post',
+    data: {
+      l_id: params.l_id
+    }
+  })
+}
 export function updateStuInfo(params) {
   return request({
     url: '/api/info/updateStuInfo',

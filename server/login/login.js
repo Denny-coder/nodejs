@@ -88,6 +88,7 @@ router.post('/user/register', function(req, res) {
   // 对发来的注册数据进行验证
   const name = req.body.name
   const pwd = req.body.pwd
+  const roles = req.body.pwd
   if (!name) {
     res.send({ code: 600, msg: 'name 不能为空！' })
     return
@@ -110,6 +111,7 @@ router.post('/user/register', function(req, res) {
       } else {
         db.Login.create(
           {
+            roles: roles,
             name: name,
             pwd: pwd
           },

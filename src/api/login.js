@@ -11,13 +11,12 @@ export function login(username, password) {
   })
 }
 
-export function register(username, password) {
+export function register(params) {
   return request({
     url: '/api/user/register',
     method: 'post',
     data: {
-      username,
-      password
+      ...params
     }
   })
 }

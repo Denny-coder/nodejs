@@ -48,3 +48,27 @@ export function changeEdit(params) {
     }
   })
 }
+
+export function getTeachList(params) {
+  return request({
+    url: '/api/list/getTeach',
+    method: 'post',
+    data: {
+      major: params.major,
+      classes: params.classes,
+      t_name: params.t_name,
+      pageNum: params.pageNum,
+      worknum: params.worknum,
+      pageSize: params.pageSize
+    }
+  })
+}
+export function delTeach(params) {
+  return request({
+    url: '/api/list/delTeach',
+    method: 'post',
+    data: {
+      l_id: params.l_id
+    }
+  })
+}
