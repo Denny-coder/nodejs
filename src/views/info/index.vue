@@ -13,7 +13,7 @@
               <el-radio label="1">男</el-radio>
               <el-radio label="0">女</el-radio>
             </el-radio-group>
-            <span v-show="!isShow" v-text="form.sex===0?'女':'男'"></span>
+            <span v-show="!isShow" v-text="form.sex==='0'?'女':'男'"></span>
           </el-form-item>
         </el-col>
         <el-col :span="12">

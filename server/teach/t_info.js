@@ -160,7 +160,7 @@ router.post('/info/getTeachType', function(req, res) {
         })
         return
       } else {
-        res.send({ code: 200, msg: '', result: { has: 0 }}) //
+        res.send({ code: 200, msg: '', result: { }}) //
       }
     }
   })

@@ -86,15 +86,23 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/authority',
+    path: '/admin',
     component: Layout,
-    meta: { roles: ['admin'] },
+    redirect: '/admin/student',
+    name: 'Admin',
+    meta: { title: '权限管理', icon: 'form', roles: ['admin'] },
     children: [
       {
-        path: 'index',
-        name: 'Authority',
-        component: () => import('@/views/authority/index'),
-        meta: { title: '权限管理', icon: 'form' }
+        path: 'student',
+        name: 'Student',
+        component: () => import('@/views/authority/student'),
+        meta: { title: '学生管理', icon: 'form' }
+      },
+      {
+        path: 'teach',
+        name: 'Teach',
+        component: () => import('@/views/authority/teach'),
+        meta: { title: '教师管理', icon: 'form' }
       }
     ]
   },
