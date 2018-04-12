@@ -162,7 +162,6 @@ router.post('/info/changeEdit', function(req, res) {
       if (err) {
         console.log(err)
       }
-      console.log(result)
     })
   }
   res.send({ code: 200, msg: '修改成功', result: {}})

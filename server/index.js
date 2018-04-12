@@ -20,6 +20,7 @@ var s_info = require('./student/s_info')
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
 // app.use(cors)
 // 登录页
 // app.use('/login', api)

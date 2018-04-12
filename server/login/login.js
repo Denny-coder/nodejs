@@ -2,15 +2,27 @@
 var express = require('express')
 var router = express.Router()
 const db = require('../db')
+const token = require('../token/token')
 
 // 该路由使用的中间件
 router.use(function timeLog(req, res, next) {
-  console.log('Time: ', Date.now())
-  next()
+  // 白名单不验证token
+  if (req._parsedUrl.pathname === '/user/login') {
+    console.log(new Date())
+    next()
+  } else {
+    const tokenCheck = token.checkToken(req.headers['x-token'])
+    if (tokenCheck !== 50014 && tokenCheck !== 50008) {
+      next()
+    } else if (tokenCheck === 50014) {
+      res.send({ code: 50014, msg: 'token 已过期' })
+    } else if (tokenCheck === 50014) {
+      res.send({ code: 50008, msg: 'token 非法' })
+    }
+  }
 })
 // 定义网站主页的路由
 router.get('/user/login', function(req, res) {
-  console.log(req.query)
   // 对发来的登录数据进行验证
   if (!req.query.name) {
     res.send({ code: 600, msg: 'name 不能为空！' })
@@ -25,7 +37,6 @@ router.get('/user/login', function(req, res) {
     doc
   ) {
     if (err) {
-      console.log('查询出错：' + err)
       res.send({ code: 700, msg: '查询出错：' + err })
       return
     } else {
@@ -37,11 +48,13 @@ router.get('/user/login', function(req, res) {
           res.send({ code: 700, msg: '密码不正确！' })
           return
         } else {
+          console.log(1233)
+          const setToken = token.createToken({ name: req.query.name, pwd: req.query.pwd })
           res.send({
             code: 200,
             msg: '密码正确，登录成功',
             data: {
-              token: doc.token,
+              token: setToken,
               name: doc.name,
               roles: doc.roles,
               l_id: doc._id
@@ -55,15 +68,12 @@ router.get('/user/login', function(req, res) {
 })
 // 定义网站主页的路由
 router.get('/user/info', function(req, res) {
-  console.log(req.query)
+  const tokenObj = token.decodeToken(req.headers['x-token'])
+  const name = tokenObj.payload.data.name
+  const pwd = tokenObj.payload.data.pwd
   // 对发来的登录数据进行验证
-  if (!req.query.token) {
-    res.send({ code: 600, msg: 'token 验证失败' })
-    return
-  }
-  db.Login.findOne({ token: req.query.token }, function(err, doc) {
+  db.Login.findOne({ name: name, pwd: pwd }, function(err, doc) {
     if (err) {
-      console.log('查询出错：' + err)
       res.send({ code: 700, msg: '查询出错：' + err })
       return
     } else {
@@ -101,7 +111,6 @@ router.post('/user/register', function(req, res) {
   // 是否存在账号
   db.Login.findOne({ name: req.body.name }, function(err, doc) {
     if (err) {
-      console.log('查询出错：' + err)
       res.send({ code: 700, msg: '查询出错：' + err })
       return
     } else {

@@ -52,6 +52,7 @@ const user = {
             const data = response.data
             setToken(data.token)
             Cookies.set('L_ID', data.l_id)
+            Cookies.set('roles', data.roles.join(''))
             commit('SET_TOKEN', data.token)
             commit('SET_NAME', data.name)
             commit('SET_L_ID', data.l_id)
@@ -66,7 +67,7 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token)
+        getInfo()
           .then(response => {
             const data = response.data
             commit('SET_ROLES', data.roles)
