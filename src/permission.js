@@ -29,13 +29,12 @@ router.beforeEach((to, from, next) => {
               next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
             })
             // 拉取用户信息
-            // next()
           })
           .catch(() => {
-            // store.dispatch('FedLogOut').then(() => {
-            //   Message.error('验证失败,请重新登录')
-            //   next({ path: '/login' })
-            // })
+            store.dispatch('FedLogOut').then(() => {
+              Message.error('验证失败,请重新登录')
+              next({ path: '/login' })
+            })
           })
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓

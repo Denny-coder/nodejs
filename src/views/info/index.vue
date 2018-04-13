@@ -37,7 +37,7 @@
             <span v-show="!isShow" v-text="form.major===1?'网络工程':'信息管理'"></span>
           </el-form-item>
           <el-form-item label="校号：" prop="schoolnum">
-            <el-input v-show="isShow" v-model="form.schoolnum">
+            <el-input v-show="isShow" :disabled="true" v-model="form.schoolnum">
             </el-input>
             <span v-show="!isShow" v-text="form.schoolnum"></span>
           </el-form-item>
@@ -223,6 +223,11 @@ export default {
             this.is_edit = response.result.is_edit
             this.isShow = false
           } else {
+            this.form.schoolnum = response.result.schoolnum
+            this.form.major = response.result.major
+            this.form.classes = response.result.classes
+            this.is_edit = response.result.is_edit
+            this.has = response.result.has
             this.isShow = true
           }
         })

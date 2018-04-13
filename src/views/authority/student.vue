@@ -41,6 +41,33 @@
         <el-table stripe :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
           <!-- <el-table-column type="selection" width="55">
           </el-table-column> -->
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form label-position="right" label-width="130px" inline class="demo-table-expand">
+                <el-form-item label="性别：">
+                  <span>{{ props.row.sex }}</span>
+                </el-form-item>
+                <el-form-item label="民族：">
+                  <span>{{ props.row.nation }}</span>
+                </el-form-item>
+                <el-form-item label="身份证号：">
+                  <span>{{ props.row.idcard }}</span>
+                </el-form-item>
+                <el-form-item label="生日：">
+                  <span>{{ props.row.birthday }}</span>
+                </el-form-item>
+                <el-form-item label="籍贯：">
+                  <span>{{ props.row.origin }}</span>
+                </el-form-item>
+                <el-form-item label="父亲手机号：">
+                  <span>{{ props.row.f_phone }}</span>
+                </el-form-item>
+                <el-form-item label="母亲手机号：">
+                  <span>{{ props.row.m_phone }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
           <el-table-column prop="fullname" label="姓名" width="180">
           </el-table-column>
           <el-table-column prop="schoolnum" label="校号" width="180">
@@ -66,6 +93,7 @@
               <el-button type="danger" @click="dialogVisibleDel=true,deletId=scope.row.l_id" plain>删 除</el-button>
             </template>
           </el-table-column>
+
         </el-table>
         <!--尾部工具栏-->
         <div class="m-t-20">
@@ -84,17 +112,26 @@
     <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="校号">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.account"></el-input>
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="form.pwd"></el-input>
         </el-form-item>
         <el-form-item label="角色">
-          <el-radio-group v-model="form.roles">
+          <el-radio-group :disabled="true" v-model="form.roles">
             <el-radio label="student">学生</el-radio>
             <el-radio label="teach">教师</el-radio>
-            <el-radio label="admin">管理员</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item class="modal" label="专业：" prop="major">
+          <el-select v-model="form.major" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="班级：" prop="classes">
+          <el-input v-model="form.classes">
+          </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -123,7 +160,9 @@ export default {
       },
       form: {
         roles: 'student',
-        name: '',
+        account: '',
+        major: '',
+        classes: '',
         pwd: ''
       },
       options: [], // 专业
@@ -172,8 +211,14 @@ export default {
     },
     // 添加学生
     addStudent: function() {
-      this.form.roles = this.form.roles.split(',')
-      register(this.form)
+      const para = {
+        roles: this.form.roles.split(','),
+        account: this.form.account,
+        classes: this.form.classes,
+        major: this.form.major,
+        pwd: this.form.pwd
+      }
+      register(para)
         .then(response => {
           Message({
             message: response.msg + '请告知学生',
@@ -181,6 +226,7 @@ export default {
             duration: 5 * 1000
           })
           this.dialogVisible = false
+          this.form.roles = this.form.roles.join(',')
         })
         .catch(err => {
           console.log(err)
@@ -242,6 +288,9 @@ export default {
 }
 .el-input .el-select {
   width: 130px;
+}
+.modal .el-select {
+  width: 100%;
 }
 </style>
 

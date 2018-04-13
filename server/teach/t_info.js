@@ -75,7 +75,35 @@ router.post('/info/setTeachInfo', function(req, res) {
       return
     } else {
       if (doc) {
-        res.send({ code: 700, msg: '该用户已填写个人信息，请勿重复填写！' })
+        db.T_info.update(
+          { l_id: l_id },
+          {
+            $set: {
+              fullname: fullname, // 姓名
+              sex: sex, // 性别
+              age: age, // 年龄
+              nation: nation, // 年龄
+              worknum: worknum, // 校号
+              major: major, // 专业
+              classes: classes, // 班级
+              phone: phone, // 手机号
+              email: email, // 邮箱
+              idcard: idcard, // 身份证号
+              birthday: birthday, // 生日
+              origin: origin // 籍贯
+            }
+          },
+          function(err, result) {
+            if (err) {
+              res.send({ code: 700, msg: '编辑失败' })
+            } else {
+              res.send({
+                code: 200,
+                msg: '编辑成功'
+              })
+            }
+          }
+        )
         return
       } else {
         db.T_info.create(
@@ -109,42 +137,62 @@ router.post('/info/setTeachInfo', function(req, res) {
 })
 router.post('/info/getTeachInfo', function(req, res) {
   const l_id = req.body.l_id
-  db.T_info.findOne({ l_id: l_id }, function(err, doc) {
-    if (err) {
-      res.send({ code: 700, msg: '查询出错：' + err })
-      return
+  db.Login.findOne({ _id: l_id }, function(error, response) {
+    if (error) {
+      res.send({ code: 700, msg: '查询出错：' + error })
     } else {
-      if (doc) {
-        res.send({
-          code: 200,
-          msg: '',
-          result: {
-            l_id: doc.l_id, // 登录id
-            fullname: doc.fullname, // 姓名
-            sex: doc.sex, // 性别
-            age: doc.age, // 年龄
-            nation: doc.nation, // 民族
-            worknum: doc.worknum, // 工号
-            major: doc.major, // 专业
-            classes: doc.classes, // 班级
-            phone: doc.phone, // 手机号
-            email: doc.email, // 邮箱
-            idcard: doc.idcard, // 身份证号
-            birthday: doc.birthday, // 生日
-            has: 1, // 是否填写
-            origin: doc.origin // 籍贯
+      if (response) {
+        db.T_info.findOne({ l_id: l_id }, function(err, doc) {
+          if (err) {
+            res.send({ code: 700, msg: '查询出错：' + err })
+            return
+          } else {
+            if (doc) {
+              res.send({
+                code: 200,
+                msg: '',
+                result: {
+                  l_id: doc.l_id, // 登录id
+                  fullname: doc.fullname, // 姓名
+                  sex: doc.sex, // 性别
+                  age: doc.age, // 年龄
+                  nation: doc.nation, // 民族
+                  worknum: doc.worknum, // 工号
+                  major: doc.major, // 专业
+                  classes: doc.classes, // 班级
+                  phone: doc.phone, // 手机号
+                  email: doc.email, // 邮箱
+                  idcard: doc.idcard, // 身份证号
+                  birthday: doc.birthday, // 生日
+                  has: '1', // 是否填写
+                  origin: doc.origin // 籍贯
+                }
+              })
+              return
+            } else {
+              res.send({
+                code: 200,
+                msg: '',
+                result: {
+                  worknum: response.account, // 工号
+                  major: response.major, // 专业
+                  classes: response.classes, // 班级
+                  is_edit: '0', // 母亲手机号
+                  has: '0' // 是否填写
+                }
+              })
+            }
           }
         })
-        return
       } else {
-        res.send({ code: 200, msg: '', result: { has: 0 }}) //
+        res.send({ code: 200, msg: '查询为空', result: {}})
       }
     }
   })
 })
 router.post('/info/getTeachType', function(req, res) {
   const l_id = req.body.l_id
-  db.T_info.findOne({ l_id: l_id }, function(err, doc) {
+  db.Login.findOne({ l_id: l_id }, function(err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
@@ -160,7 +208,7 @@ router.post('/info/getTeachType', function(req, res) {
         })
         return
       } else {
-        res.send({ code: 200, msg: '', result: { }}) //
+        res.send({ code: 200, msg: '', result: {}}) //
       }
     }
   })

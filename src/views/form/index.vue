@@ -1,73 +1,92 @@
 <template>
-  <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai"></el-option>
-          <el-option label="Zone two" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-time-picker type="fixed-time" placeholder="Pick a time" v-model="form.date2" style="width: 100%;"></el-time-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery"></el-switch>
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type"></el-checkbox>
-          <el-checkbox label="Promotion activities" name="type"></el-checkbox>
-          <el-checkbox label="Offline activities" name="type"></el-checkbox>
-          <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor"></el-radio>
-          <el-radio label="Venue"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input type="textarea" v-model="form.desc"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <el-row class="m-100">
+    <el-col :span="24" class="m-b-20">
+      <el-button type="primary" v-show="isEdit" @click="isEdit=false">编辑</el-button>
+      <el-button type="primary" v-show="!isEdit" @click="editSubmit">保存</el-button>
+    </el-col>
+    <el-col :span="24">
+      <el-table border :data="tableData" style="width: 100%">
+        <el-table-column prop="one" label="" width="180">
+        </el-table-column>
+        <el-table-column prop="two" label="星期一" width="180">
+          <template slot-scope="scope">
+            <el-input type="text" v-show="!isEdit" v-model="scope.row.two"></el-input>
+            <span v-text="scope.row.two" v-show="isEdit"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="three" label="星期二" width="180">
+          <template slot-scope="scope">
+            <el-input type="text" v-show="!isEdit" v-model="scope.row.three"></el-input>
+            <span v-text="scope.row.three" v-show="isEdit"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="four" label="星期三">
+          <template slot-scope="scope">
+            <el-input type="text" v-show="!isEdit" v-model="scope.row.four"></el-input>
+            <span v-text="scope.row.four" v-show="isEdit"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="five" label="星期四">
+          <template slot-scope="scope">
+            <el-input type="text" v-show="!isEdit" v-model="scope.row.five"></el-input>
+            <span v-text="scope.row.five" v-show="isEdit"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="six" label="星期五">
+          <template slot-scope="scope">
+            <el-input type="text" v-show="!isEdit" v-model="scope.row.six"></el-input>
+            <span v-text="scope.row.six" v-show="isEdit"></span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-col>
+  </el-row>
+
 </template>
 
 <script>
 export default {
   data() {
     return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+      isEdit: true,
+      tableData: [
+        {
+          one: '第一、二节',
+          two: 'html5 赵霞 机房508',
+          three: '无线与移动网络技术 马艳辉A4-709',
+          four: '无线与移动网络技术 马艳辉A4-709',
+          five: '网络测试 迟凯A4-709',
+          six: '网络测试 迟凯A4-709'
+        },
+        {
+          one: '第三、四节',
+          two: '工程测试 杨为民A4-709 ',
+          three: '网络测试 迟凯 A4-709',
+          four: '网络测试 迟凯 A4-709',
+          five: 'ASP.net 王倩,504机房',
+          six: 'ASP.net 王倩,504机房'
+        },
+        {
+          one: '第五、六节',
+          two: '无线与移动网络技术 马艳辉 A4-709',
+          three: '工程测试 杨为民 A4-709',
+          four: '工程测试 杨为民 A4-709',
+          five: '',
+          six: ''
+        },
+        {
+          one: '第七、八节',
+          two: 'ASP.net 王倩A4-709',
+          three: 'J2EE 尚莹A4-709',
+          four: 'J2EE 尚莹A4-709',
+          five: '',
+          six: ''
+        }
+      ]
     }
   },
   methods: {
-    onSubmit() {
-      this.$message('submit!')
-    },
-    onCancel() {
+    editSubmit() {
       this.$message({
         message: 'cancel!',
         type: 'warning'
@@ -78,8 +97,11 @@ export default {
 </script>
 
 <style scoped>
-.line{
-  text-align: center;
+.m-100 {
+  margin: 100px 100px;
+}
+.m-b-20 {
+  margin-bottom: 20px;
 }
 </style>
 

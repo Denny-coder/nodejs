@@ -32,81 +32,6 @@
         </el-col>
       </el-form>
     </el-row>
-    <el-row class="m-r-20 m-l-20" :gutter="0">
-      <el-col :span="6" class="m-b-20">
-        <el-button @click="changeBtn">修改权限</el-button>
-      </el-col>
-      <el-col :span="24">
-        <!--表格标题-->
-        <el-table stripe :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55">
-          </el-table-column>
-          <el-table-column prop="fullname" label="姓名" width="180">
-            <template slot-scope="scope">
-              <el-button type="text" v-text="scope.row.fullname" @click="getGrade"></el-button>
-            </template>
-          </el-table-column>
-          <el-table-column prop="schoolnum" label="校号" width="180">
-          </el-table-column>
-          <el-table-column prop="major" label="专业">
-            <template slot-scope="scope">
-              <span v-text="scope.row.major==='1'?'网络工程':'信息管理'"></span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="classes" label="班级">
-          </el-table-column>
-          <el-table-column prop="phone" label="手机号">
-          </el-table-column>
-          <el-table-column prop="email" label="邮箱">
-          </el-table-column>
-          <el-table-column prop="age" label="年龄">
-            <template slot-scope="scope">
-              <span v-text="scope.row.age+'岁'"></span>
-            </template>
-          </el-table-column>
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-form label-position="right" label-width="130px" inline class="demo-table-expand">
-                <el-form-item label="性别：">
-                  <span>{{ props.row.sex }}</span>
-                </el-form-item>
-                <el-form-item label="民族：">
-                  <span>{{ props.row.nation }}</span>
-                </el-form-item>
-                <el-form-item label="身份证号：">
-                  <span>{{ props.row.idcard }}</span>
-                </el-form-item>
-                <el-form-item label="生日：">
-                  <span>{{ props.row.birthday }}</span>
-                </el-form-item>
-                <el-form-item label="籍贯：">
-                  <span>{{ props.row.origin }}</span>
-                </el-form-item>
-                <el-form-item label="父亲手机号：">
-                  <span>{{ props.row.f_phone }}</span>
-                </el-form-item>
-                <el-form-item label="母亲手机号：">
-                  <span>{{ props.row.m_phone }}</span>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!--尾部工具栏-->
-        <div class="m-t-20">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-          </el-pagination>
-        </div>
-      </el-col>
-    </el-row>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-      <el-radio v-model="is_edit" label="1">可编辑</el-radio>
-      <el-radio v-model="is_edit" label="0">不可编辑</el-radio>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="changeEdit">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -140,7 +65,7 @@ export default {
   methods: {
     // 跳转成绩编辑列表
     getGrade() {
-      router.push({ path: '/class/grade' })
+      router.push({ path: '/class/index/grade' })
     },
     getData() {
       const param = {

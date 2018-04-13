@@ -109,13 +109,26 @@ export const asyncRouterMap = [
   {
     path: '/class',
     component: Layout,
-    meta: { roles: ['teach'] },
+    meta: { title: '班级管理', icon: 'form', roles: ['teach'] },
     children: [
       {
         path: 'index',
         name: 'Class',
         component: () => import('@/views/class/index'),
-        meta: { title: '班级管理', icon: 'form' }
+        meta: { title: '学生管理', icon: 'form' }
+      },
+      {
+        path: 'course',
+        name: 'Course',
+        component: () => import('@/views/form/index'),
+        meta: { title: '课程管理', icon: 'form' }
+      },
+      {
+        path: 'grade',
+        name: 'Grade',
+        hidden: true,
+        component: () => import('@/views/class/grade'),
+        meta: { title: '成绩管理', icon: 'form' }
       }
     ]
   },

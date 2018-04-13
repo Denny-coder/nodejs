@@ -3,11 +3,11 @@
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
       class="card-box login-form">
       <h3 class="title">平台登录</h3>
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="account" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
@@ -26,7 +26,7 @@
         </el-button> -->
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
+        <span style="margin-right:20px;">account: admin</span>
         <span> password: admin</span>
       </div>
     </el-form>
@@ -55,11 +55,11 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
+        account: 'admin',
         password: 'admin'
       },
       loginRules: {
-        username: [
+        account: [
           { required: true, trigger: 'blur', validator: validateUsername }
         ],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]

@@ -13,7 +13,7 @@
               <el-radio label="1">男</el-radio>
               <el-radio label="0">女</el-radio>
             </el-radio-group>
-            <span v-show="!isShow" v-text="form.sex===0?'女':'男'"></span>
+            <span v-show="!isShow" v-text="form.sex===0?'女':'男'" v-cloak></span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -25,26 +25,26 @@
           <el-form-item label="民族：" prop="nation">
             <el-input v-show="isShow" v-model="form.nation">
             </el-input>
-            <span v-show="!isShow" v-text="form.nation"></span>
+            <span v-show="!isShow" v-text="form.nation" ></span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="专业：" prop="major">
-            <el-select v-show="isShow" v-model="form.major" placeholder="请选择">
+            <el-select v-show="isShow" :disabled="true" v-model="form.major" placeholder="请选择">
               <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
-            <span v-show="!isShow" v-text="form.major===1?'网络工程':'信息管理'"></span>
+            <span v-show="!isShow" v-text="form.major===1?'网络工程':'信息管理'" v-cloak></span>
           </el-form-item>
           <el-form-item label="工号：" prop="worknum">
-            <el-input v-show="isShow" v-model="form.worknum">
+            <el-input v-show="isShow" :disabled="true" v-model="form.worknum">
             </el-input>
             <span v-show="!isShow" v-text="form.worknum"></span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="班级：" prop="classes">
-            <el-input v-show="isShow" v-model="form.classes">
+            <el-input v-show="isShow" :disabled="true" v-model="form.classes">
             </el-input>
             <span v-show="!isShow" v-text="form.classes"></span>
           </el-form-item>
@@ -181,12 +181,16 @@ export default {
     getInfomation() {
       getTeachInfo(this.l_id)
         .then(response => {
-          if (response.result.has) {
+          if (response.result.has === '1') {
             this.form = response.result
             this.has = response.result.has
             // this.is_edit = response.result.is_edit
             this.isShow = false
           } else {
+            this.form.worknum = response.result.worknum
+            this.form.major = response.result.major
+            this.form.classes = response.result.classes
+            this.has = response.result.has
             this.isShow = true
           }
         })

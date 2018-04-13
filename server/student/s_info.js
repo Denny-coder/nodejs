@@ -115,37 +115,58 @@ router.post('/info/setInfo', function(req, res) {
 router.post('/info/getInfo', function(req, res) {
   // 对发来的注册数据进行验证
   const l_id = req.body.l_id
-  db.S_info.findOne({ l_id: l_id }, function(err, doc) {
-    if (err) {
-      res.send({ code: 700, msg: '查询出错：' + err })
-      return
+  db.Login.findOne({ _id: l_id }, function(error, response) {
+    if (error) {
+      res.send({ code: 700, msg: '查询出错：' + error })
     } else {
-      if (doc) {
-        res.send({
-          code: 200,
-          msg: '',
-          result: {
-            fullname: doc.fullname, // 姓名
-            sex: doc.sex, // 性别
-            age: doc.age, // 年龄
-            nation: doc.nation, // 年龄
-            schoolnum: doc.schoolnum, // 校号
-            major: doc.major, // 专业
-            classes: doc.classes, // 班级
-            phone: doc.phone, // 手机号
-            email: doc.email, // 邮箱
-            idcard: doc.idcard, // 身份证号
-            birthday: doc.birthday, // 生日
-            origin: doc.origin, // 籍贯
-            f_phone: doc.f_phone, // 父亲手机号
-            m_phone: doc.m_phone, // 母亲手机号
-            is_edit: doc.is_edit, // 母亲手机号
-            has: 1 // 是否填写
+      if (response) {
+        db.S_info.findOne({ l_id: l_id }, function(err, doc) {
+          if (err) {
+            res.send({ code: 700, msg: '查询出错：' + err })
+            return
+          } else {
+            if (doc) {
+              res.send({
+                code: 200,
+                msg: '',
+                result: {
+                  fullname: doc.fullname, // 姓名
+                  sex: doc.sex, // 性别
+                  age: doc.age, // 年龄
+                  nation: doc.nation, // 年龄
+                  schoolnum: doc.schoolnum, // 校号
+                  major: doc.major, // 专业
+                  classes: doc.classes, // 班级
+                  phone: doc.phone, // 手机号
+                  email: doc.email, // 邮箱
+                  idcard: doc.idcard, // 身份证号
+                  birthday: doc.birthday, // 生日
+                  origin: doc.origin, // 籍贯
+                  f_phone: doc.f_phone, // 父亲手机号
+                  m_phone: doc.m_phone, // 母亲手机号
+                  is_edit: doc.is_edit, // 母亲手机号
+                  has: 1 // 是否填写
+                }
+              })
+              return
+            } else {
+              console.log(response)
+              res.send({
+                code: 200,
+                msg: '',
+                result: {
+                  schoolnum: response.account, // 校号
+                  major: response.major, // 专业
+                  classes: response.classes, // 班级
+                  is_edit: '0', // 母亲手机号
+                  has: '0' // 是否填写
+                }
+              })
+            }
           }
         })
-        return
       } else {
-        res.send({ code: 200, msg: '', has: 0, result: {}}) //
+        res.send({ code: 200, msg: '查询为空', result: {}})
       }
     }
   })

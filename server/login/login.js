@@ -24,15 +24,15 @@ router.use(function timeLog(req, res, next) {
 // 定义网站主页的路由
 router.get('/user/login', function(req, res) {
   // 对发来的登录数据进行验证
-  if (!req.query.name) {
-    res.send({ code: 600, msg: 'name 不能为空！' })
+  if (!req.query.account) {
+    res.send({ code: 600, msg: 'account 不能为空！' })
     return
   }
   if (!req.query.pwd) {
     res.send({ code: 600, msg: 'pwd 不能为空！' })
     return
   }
-  db.Login.findOne({ name: req.query.name, pwd: req.query.pwd }, function(
+  db.Login.findOne({ account: req.query.account, pwd: req.query.pwd }, function(
     err,
     doc
   ) {
@@ -41,27 +41,26 @@ router.get('/user/login', function(req, res) {
       return
     } else {
       if (!doc) {
-        res.send({ code: 700, msg: '不存在该用户名：' + req.query.name })
+        res.send({
+          code: 700,
+          msg: '账号或密码错误'
+        })
         return
       } else {
-        if (req.query.pwd !== doc.pwd) {
-          res.send({ code: 700, msg: '密码不正确！' })
-          return
-        } else {
-          console.log(1233)
-          const setToken = token.createToken({ name: req.query.name, pwd: req.query.pwd })
-          res.send({
-            code: 200,
-            msg: '密码正确，登录成功',
-            data: {
-              token: setToken,
-              name: doc.name,
-              roles: doc.roles,
-              l_id: doc._id
-            }
-          })
-          return
-        }
+        const setToken = token.createToken({
+          account: req.query.account,
+          pwd: req.query.pwd
+        })
+        res.send({
+          code: 200,
+          msg: '密码正确，登录成功',
+          data: {
+            token: setToken,
+            account: doc.account,
+            roles: doc.roles,
+            l_id: doc._id
+          }
+        })
       }
     }
   })
@@ -69,10 +68,10 @@ router.get('/user/login', function(req, res) {
 // 定义网站主页的路由
 router.get('/user/info', function(req, res) {
   const tokenObj = token.decodeToken(req.headers['x-token'])
-  const name = tokenObj.payload.data.name
+  const account = tokenObj.payload.data.account
   const pwd = tokenObj.payload.data.pwd
   // 对发来的登录数据进行验证
-  db.Login.findOne({ name: name, pwd: pwd }, function(err, doc) {
+  db.Login.findOne({ account: account, pwd: pwd }, function(err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
@@ -83,10 +82,7 @@ router.get('/user/info', function(req, res) {
       } else {
         res.send({
           code: 200,
-          data: {
-            name: doc.name,
-            roles: doc.roles
-          }
+          data: { account: doc.account, roles: doc.roles }
         })
       }
     }
@@ -96,39 +92,53 @@ router.get('/user/info', function(req, res) {
 // 定义 about 页面的路由
 router.post('/user/register', function(req, res) {
   // 对发来的注册数据进行验证
-  const name = req.body.name
+  const account = req.body.account
   const pwd = req.body.pwd
-  const roles = req.body.pwd
-  if (!name) {
-    res.send({ code: 600, msg: 'name 不能为空！' })
+  const roles = req.body.roles
+  const major = req.body.major
+  const classes = req.body.classes
+  if (!account) {
+    res.send({ code: 600, msg: '账号 不能为空！' })
     return
   }
   if (!pwd) {
     res.send({ code: 600, msg: 'pwd 不能为空！' })
     return
   }
-  // 查询数据库验证注册账号、密码
+  if (!major) {
+    res.send({ code: 600, msg: '专业 不能为空！' })
+    return
+  }
+  if (!classes) {
+    res.send({ code: 600, msg: '班级 不能为空！' })
+    return
+  }
   // 是否存在账号
-  db.Login.findOne({ name: req.body.name }, function(err, doc) {
+  db.Login.findOne({ account: account }, function(err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
     } else {
       if (doc) {
-        res.send({ code: 700, msg: '该用户名名已经被注册：' + name })
+        res.send({ code: 700, msg: '该账号已经被注册：' + account })
         return
       } else {
         db.Login.create(
           {
             roles: roles,
-            name: name,
+            account: account,
+            classes: classes,
+            major: major,
             pwd: pwd
           },
           function(err, doc) {
             if (err) {
               res.end('注册失败:' + err)
             } else {
-              res.send({ code: 200, msg: '用户注册成功：' + name })
+              res.send({
+                code: 200,
+                msg: '用户注册成功：' + account
+              })
               return
             }
           }

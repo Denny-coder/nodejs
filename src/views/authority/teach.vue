@@ -15,13 +15,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="学生姓名" prop="s_name">
-            <el-input v-model.trim="formInline.t_name" placeholder="请输入学生姓名"></el-input>
+          <el-form-item label="姓名" prop="s_name">
+            <el-input v-model.trim="formInline.t_name" placeholder="请输入姓名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="校号" prop="schoolnum">
-            <el-input v-model.trim="formInline.worknum" placeholder="请输入学生校号"></el-input>
+          <el-form-item label="工号" prop="worknum">
+            <el-input v-model.trim="formInline.worknum" placeholder="请输入工号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -33,14 +33,36 @@
       </el-form>
     </el-row>
     <el-row class="m-r-20 m-l-20" :gutter="0">
+      <el-col :span="6" class="m-b-20">
+        <el-button type="primary" plain @click="dialogVisible=true">添加教师</el-button>
+      </el-col>
       <el-col :span="24">
         <!--表格标题-->
         <el-table stripe :data="tableData" border style="width: 100%">
-          <!-- <el-table-column type="selection" width="55"> -->
-          <!-- </el-table-column> -->
+                 <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form label-position="right" label-width="130px" inline class="demo-table-expand">
+                <el-form-item label="性别：">
+                  <span>{{ props.row.sex }}</span>
+                </el-form-item>
+                <el-form-item label="民族：">
+                  <span>{{ props.row.nation }}</span>
+                </el-form-item>
+                <el-form-item label="身份证号：">
+                  <span>{{ props.row.idcard }}</span>
+                </el-form-item>
+                <el-form-item label="生日：">
+                  <span>{{ props.row.birthday }}</span>
+                </el-form-item>
+                <el-form-item label="籍贯：">
+                  <span>{{ props.row.origin }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>-->
           <el-table-column prop="fullname" label="姓名" width="180">
           </el-table-column>
-          <el-table-column prop="worknum" label="校号" width="180">
+          <el-table-column prop="worknum" label="工号" width="180">
           </el-table-column>
           <el-table-column prop="major" label="所在专业">
             <template slot-scope="scope">
@@ -78,12 +100,43 @@
         <el-button type="primary" @click="del">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="工号">
+          <el-input v-model="form.account"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="form.pwd"></el-input>
+        </el-form-item>
+        <el-form-item label="角色">
+          <el-radio-group :disabled="true" v-model="form.roles">
+            <el-radio label="student">学生</el-radio>
+            <el-radio label="teach">教师</el-radio>
+          </el-radio-group>
+        </el-form-item>
+         <el-form-item class="modal" label="专业：" prop="major">
+          <el-select v-model="form.major" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="班级：" prop="classes">
+          <el-input v-model="form.classes">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addTeach">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getmajor } from '@/api/enum'
 import { getTeachList, delTeach } from '@/api/teach'
+import { register } from '@/api/login'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 
@@ -95,6 +148,13 @@ export default {
         classes: '',
         worknum: '',
         t_name: ''
+      },
+      form: {
+        roles: 'teach',
+        account: '',
+        major: '',
+        classes: '',
+        pwd: ''
       },
       options: [], // 专业
       sels: [], // 专业
@@ -134,6 +194,29 @@ export default {
           })
           this.dialogVisible = false
           this.getData()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // 添加学生
+    addTeach: function() {
+      const para = {
+        roles: this.form.roles.split(','),
+        account: this.form.account,
+        major: this.form.major,
+        classes: this.form.classes,
+        pwd: this.form.pwd
+      }
+      register(para)
+        .then(response => {
+          Message({
+            message: response.msg + '请告知教师 ',
+            type: 'success',
+            duration: 5 * 1000
+          })
+          this.dialogVisible = false
+          this.form.roles = this.form.roles.join(',')
         })
         .catch(err => {
           console.log(err)
@@ -195,6 +278,9 @@ export default {
 }
 .el-input .el-select {
   width: 130px;
+}
+.modal .el-select {
+  width: 100%;
 }
 </style>
 

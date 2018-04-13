@@ -45,9 +45,9 @@ const user = {
     // },
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const account = userInfo.account.trim()
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password)
+        login(account, userInfo.password)
           .then(response => {
             const data = response.data
             setToken(data.token)
@@ -71,7 +71,7 @@ const user = {
           .then(response => {
             const data = response.data
             commit('SET_ROLES', data.roles)
-            commit('SET_NAME', data.name)
+            commit('SET_NAME', data.account)
             resolve(response)
           })
           .catch(error => {
