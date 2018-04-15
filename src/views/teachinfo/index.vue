@@ -34,7 +34,7 @@
               <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
-            <span v-show="!isShow" v-text="form.major===1?'网络工程':'信息管理'" v-cloak></span>
+            <span v-show="!isShow" v-text="form.major==='1'?'网络工程':'信息管理'" v-cloak></span>
           </el-form-item>
           <el-form-item label="工号：" prop="worknum">
             <el-input v-show="isShow" :disabled="true" v-model="form.worknum">

@@ -5,7 +5,7 @@
       <el-button type="primary" v-show="!isEdit" @click="editSubmit">保存</el-button>
     </el-col>
     <el-col :span="24">
-      <el-table border :data="tableData" style="width: 100%">
+      <el-table border :data="course" style="width: 100%">
         <el-table-column prop="one" label="" width="180">
         </el-table-column>
         <el-table-column prop="two" label="星期一" width="180">
@@ -45,11 +45,16 @@
 </template>
 
 <script>
+import { getTeachType } from '@/api/teach'
+import { getInfo } from '@/api/student'
+import { setCourse, getCourse, updateCourse } from '@/api/course'
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
       isEdit: true,
-      tableData: [
+      course: [
         {
           one: '第一、二节',
           two: 'html5 赵霞 机房508',
@@ -82,15 +87,80 @@ export default {
           five: '',
           six: ''
         }
-      ]
+      ],
+      major: '',
+      classes: ''
     }
   },
   methods: {
     editSubmit() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
+      const para = {
+        major: this.major,
+        classes: this.classes,
+        course: this.course
+      }
+      setCourse(para)
+        .then(response => {
+          this.isEdit = false
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getTeachType() {
+      getTeachType(this.l_id)
+        .then(response => {
+          this.major = response.result.major
+          this.classes = response.result.classes
+          this.getCourse()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getInfomation() {
+      getInfo(this.l_id)
+        .then(response => {
+          this.major = response.result.major
+          this.classes = response.result.classes
+          this.getCourse()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getCourse() {
+      const para = {
+        major: this.major,
+        classes: this.classes
+      }
+      getCourse(para)
+        .then(response => {
+          // this.course = response.result.course
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    updateCourse() {
+      updateCourse(this.l_id)
+        .then(response => {
+          this.major = response.result.major
+          this.classes = response.result.classes
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  computed: {
+    ...mapGetters(['l_id', 'roles'])
+  },
+  created: function() {
+    if (this.roles[0] === 'teach') {
+      this.getTeachType()
+    } else if (this.roles[0] === 'student') {
+      this.getInfomation()
     }
   }
 }

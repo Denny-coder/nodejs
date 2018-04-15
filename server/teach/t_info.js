@@ -192,7 +192,7 @@ router.post('/info/getTeachInfo', function(req, res) {
 })
 router.post('/info/getTeachType', function(req, res) {
   const l_id = req.body.l_id
-  db.Login.findOne({ l_id: l_id }, function(err, doc) {
+  db.Login.findOne({ _id: l_id }, function(err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return

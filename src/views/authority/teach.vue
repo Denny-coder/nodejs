@@ -216,7 +216,6 @@ export default {
             duration: 5 * 1000
           })
           this.dialogVisible = false
-          this.form.roles = this.form.roles.join(',')
         })
         .catch(err => {
           console.log(err)
