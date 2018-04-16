@@ -10,11 +10,11 @@ router.post('/course/setCourse', function(req, res) {
   const course = req.body.course
   let semester
   let year
-  if ((new Date().getMonth() + 1) < 9) {
-    semester = '1'
+  if (new Date().getMonth() + 1 < 9) {
+    semester = '2'
     year = new Date().getFullYear() - 1
   } else {
-    semester = '2'
+    semester = '1'
     year = new Date().getFullYear()
   }
 
@@ -73,11 +73,11 @@ router.post('/course/getCourse', function(req, res) {
   const classes = req.body.classes
   let semester
   let year
-  if ((new Date().getMonth() + 1) < 9) {
-    semester = '1'
+  if (new Date().getMonth() + 1 < 9) {
+    semester = '2'
     year = new Date().getFullYear() - 1
   } else {
-    semester = '2'
+    semester = '1'
     year = new Date().getFullYear()
   }
   if (!classes) {
@@ -88,19 +88,23 @@ router.post('/course/getCourse', function(req, res) {
     res.send({ code: 405, msg: '专业' })
     return
   }
-  db.Course.findOne({ major: major, classes: classes, semester: semester, year: year }, function(err, doc) {
-    if (err) {
-      res.send({ code: 700, msg: '查询出错：' + err })
-      return
-    } else {
-      res.send({
-        code: 200,
-        msg: '',
-        result: doc
-      })
-      return
+  console.log(semester)
+  console.log(year)
+  db.Course.findOne(
+    { major: major, classes: classes, semester: semester, year: year },
+    function(err, doc) {
+      if (err) {
+        res.send({ code: 700, msg: '查询出错：' + err })
+        return
+      } else {
+        if (doc) {
+          res.send({ code: 200, msg: '', result: doc })
+          return
+        } else {
+          res.send({ code: 200, msg: '查询为空', result: [] })
+        }
+      }
     }
-  })
+  )
 })
 module.exports = router
-

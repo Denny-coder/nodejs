@@ -1,6 +1,6 @@
 <template>
   <el-row class="m-100">
-    <el-col :span="24" class="m-b-20">
+    <el-col :span="24" class="m-b-20" v-if="roles[0] === 'teach'">
       <el-button type="primary" v-show="isEdit" @click="isEdit=false">编辑</el-button>
       <el-button type="primary" v-show="!isEdit" @click="editSubmit">保存</el-button>
     </el-col>
@@ -49,7 +49,7 @@ import { getTeachType } from '@/api/teach'
 import { getInfo } from '@/api/student'
 import { setCourse, getCourse, updateCourse } from '@/api/course'
 import { mapGetters } from 'vuex'
-
+import { Message } from 'element-ui'
 export default {
   data() {
     return {
@@ -57,33 +57,33 @@ export default {
       course: [
         {
           one: '第一、二节',
-          two: 'html5 赵霞 机房508',
-          three: '无线与移动网络技术 马艳辉A4-709',
-          four: '无线与移动网络技术 马艳辉A4-709',
-          five: '网络测试 迟凯A4-709',
-          six: '网络测试 迟凯A4-709'
+          two: '',
+          three: '',
+          four: '',
+          five: '',
+          six: ''
         },
         {
           one: '第三、四节',
-          two: '工程测试 杨为民A4-709 ',
-          three: '网络测试 迟凯 A4-709',
-          four: '网络测试 迟凯 A4-709',
-          five: 'ASP.net 王倩,504机房',
-          six: 'ASP.net 王倩,504机房'
+          two: '',
+          three: '',
+          four: '',
+          five: '',
+          six: ''
         },
         {
           one: '第五、六节',
-          two: '无线与移动网络技术 马艳辉 A4-709',
-          three: '工程测试 杨为民 A4-709',
-          four: '工程测试 杨为民 A4-709',
+          two: '',
+          three: '',
+          four: '',
           five: '',
           six: ''
         },
         {
           one: '第七、八节',
-          two: 'ASP.net 王倩A4-709',
-          three: 'J2EE 尚莹A4-709',
-          four: 'J2EE 尚莹A4-709',
+          two: '',
+          three: '',
+          four: '',
           five: '',
           six: ''
         }
@@ -101,7 +101,12 @@ export default {
       }
       setCourse(para)
         .then(response => {
-          this.isEdit = false
+          this.isEdit = true
+          Message({
+            message: response.msg,
+            type: 'success',
+            duration: 5 * 1000
+          })
         })
         .catch(err => {
           console.log(err)
@@ -136,7 +141,9 @@ export default {
       }
       getCourse(para)
         .then(response => {
-          // this.course = response.result.course
+          if (response.result.course.length) {
+            this.course = response.result.course
+          }
         })
         .catch(err => {
           console.log(err)
