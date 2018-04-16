@@ -82,7 +82,12 @@ router.get('/user/info', function(req, res) {
       } else {
         res.send({
           code: 200,
-          data: { account: doc.account, roles: doc.roles }
+          data: {
+            account: doc.account,
+            roles: doc.roles,
+            classes: doc.classes,
+            major: doc.major
+          }
         })
       }
     }

@@ -18,6 +18,8 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
+      console.log(to)
+      console.log(from)
       if (store.getters.roles.length === 0) {
         store
           .dispatch('GetInfo')
@@ -47,6 +49,8 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
+    console.log(to)
+    console.log(from)
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {

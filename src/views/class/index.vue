@@ -43,7 +43,7 @@
           </el-table-column>
           <el-table-column prop="fullname" label="姓名" width="180">
             <template slot-scope="scope">
-              <el-button type="text" v-text="scope.row.fullname" @click="getGrade"></el-button>
+              <el-button type="text" v-text="scope.row.fullname" @click="getGrade(scope.row.l_id)"></el-button>
             </template>
           </el-table-column>
           <el-table-column prop="schoolnum" label="校号" width="180">
@@ -116,7 +116,6 @@ import { getStudentList } from '@/api/student'
 import { getTeachType, changeEdit } from '@/api/teach'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
-import router from '@/router'
 export default {
   data() {
     return {
@@ -139,8 +138,8 @@ export default {
   },
   methods: {
     // 跳转成绩编辑列表
-    getGrade() {
-      router.push({ path: '/class/grade' })
+    getGrade(l_id) {
+      this.$router.push({ path: '/class/grade', query: { l_id: l_id }})
     },
     getData() {
       const param = {

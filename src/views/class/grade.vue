@@ -1,164 +1,75 @@
 <template>
   <div>
     <el-row class="m-t-20 m-r-20 m-l-20" :gutter="0">
-      <el-form :model="formInline" label-width="90px" :inline="true" class="demo-form-inline" ref="formInline">
-        <!-- <el-col :span="6">
-          <el-form-item class="search-inputType" prop="classes">
-            <el-input placeholder="班级" v-model.trim="formInline.classes">
-              <el-select v-model="formInline.major" slot="prepend">
-                <el-option  label="请选择专业"  value="">
-                </el-option>
-                <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </el-input>
-          </el-form-item>
-        </el-col> -->
-        <el-col :span="6">
-          <el-form-item label="学生姓名" prop="s_name">
-            <el-input v-model.trim="formInline.s_name" placeholder="请输入学生姓名"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="校号" prop="schoolnum">
-            <el-input v-model.trim="formInline.schoolnum" placeholder="请输入学生校号"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item>
-            <el-button type="primary" @click="getData">搜索</el-button>
-            <el-button @click="resetForm('formInline')">重置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-form>
+      <el-col :span="6">
+        <el-button type="primary" @click="addGrade">添加成绩</el-button>
+      </el-col>
+      <el-col :span="24">
+        <el-table border :data="list" style="width: 100%">
+          <el-table-column prop="major" label="专业" width="180">
+            <template slot-scope="scope">
+              <el-input type="text" v-model="scope.row.major"></el-input>
+              <span v-text="scope.row.major"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="classes" label="班级" width="180">
+            <template slot-scope="scope">
+              <el-input type="text" v-model="scope.row.classes"></el-input>
+              <span v-text="scope.row.classes"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="semester" label="学期" width="180">
+            <template slot-scope="scope">
+              <el-input type="text" v-model="scope.row.semester"></el-input>
+              <span v-text="scope.row.semester"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="curriculum" label="课程">
+            <template slot-scope="scope">
+              <el-input type="text" v-model="scope.row.curriculum"></el-input>
+              <span v-text="scope.row.curriculum"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="score" label="成绩">
+            <template slot-scope="scope">
+              <el-input type="text" v-model="scope.row.score"></el-input>
+              <span v-text="scope.row.score"></span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
     </el-row>
+
   </div>
 </template>
 
 <script>
-import { getmajor } from '@/api/enum'
-import { getStudentList } from '@/api/student'
-import { getTeachType, changeEdit } from '@/api/teach'
 import { mapGetters } from 'vuex'
-import { Message } from 'element-ui'
-import router from '@/router'
+// import { Message } from 'element-ui'
+// import router from '@/router'
 export default {
   data() {
     return {
+      list: [],
       formInline: {
         major: '',
         classes: '',
         schoolnum: '',
         s_name: ''
-      },
-      options: [], // 专业
-      sels: [], // 专业
-      tableData: [],
-      disabled: false,
-      dialogVisible: false,
-      is_edit: '1', // 是否可编辑
-      totalCount: 0, // 分页操作
-      pageNum: 1, // 页数
-      pageSize: 5 // 每页条数
+      }
     }
   },
   methods: {
     // 跳转成绩编辑列表
-    getGrade() {
-      router.push({ path: '/class/index/grade' })
-    },
-    getData() {
-      const param = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
-        ...this.formInline
-      }
-      getStudentList(param)
-        .then(response => {
-          this.totalCount = response.totalCount
-          this.tableData = response.result
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    changeBtn: function() {
-      if (this.sels.length <= 0) {
-        Message({
-          message: '请选择至少一条数据',
-          type: 'warning',
-          duration: 5 * 1000
-        })
-      } else {
-        this.dialogVisible = true
-      }
-    },
-    // 改变权限
-    changeEdit: function() {
-      var arr = []
-      for (const key of this.sels) {
-        arr.push(key.l_id)
-      }
-      changeEdit({ ids: arr, is_edit: this.is_edit })
-        .then(response => {
-          Message({
-            message: response.msg,
-            type: 'success',
-            duration: 5 * 1000
-          })
-          this.dialogVisible = false
-          this.is_edit = '1'
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    resetForm(formName) {
-      this.pageNum = 1 // 页数
-      this.pageSize = 5 // 每页条数
-      this.$refs[formName].resetFields()
-      this.getData()
-    },
-    // 分页操作
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.getData()
-    },
-    // 每页显示的条数
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.getData()
-    },
-    handleSelectionChange(val) {
-      this.sels = val
-    },
-    getMajorList() {
-      getmajor()
-        .then(response => {
-          this.options = response.result
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    getTeachType() {
-      getTeachType(this.l_id)
-        .then(response => {
-          this.formInline = response.result
-          this.getData()
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    addGrade() {
+      console.log(this.$router)
+      // router.push({ path: '/class/index/grade' })
     }
   },
   mounted: function() {},
-  created: function() {
-    this.getMajorList()
-    this.getTeachType()
-  },
+  created: function() {},
   computed: {
-    ...mapGetters(['l_id'])
+    ...mapGetters(['major', 'classes', 'account', 'roles'])
   }
 }
 </script>

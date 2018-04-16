@@ -7,10 +7,22 @@ const user = {
     name: '',
     avatar: '',
     l_id: Cookies.get('L_ID'),
+    major: '',
+    classes: '',
+    account: '',
     roles: []
   },
 
   mutations: {
+    SET_MAJOR: (state, major) => {
+      state.major = major
+    },
+    SET_CLASSES: (state, classes) => {
+      state.classes = classes
+    },
+    SET_ACCOUNT: (state, account) => {
+      state.account = account
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -63,7 +75,6 @@ const user = {
           })
       })
     },
-
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
@@ -72,6 +83,9 @@ const user = {
             const data = response.data
             commit('SET_ROLES', data.roles)
             commit('SET_NAME', data.account)
+            commit('SET_MAJOR', data.major)
+            commit('SET_CLASSES', data.classes)
+            commit('SET_ACCOUNT', data.account)
             resolve(response)
           })
           .catch(error => {
