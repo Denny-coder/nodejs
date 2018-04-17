@@ -41,9 +41,11 @@
         <el-table stripe :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
+          <el-table-column type="index" width="50">
+          </el-table-column>
           <el-table-column prop="fullname" label="姓名" width="180">
             <template slot-scope="scope">
-              <el-button type="text" v-text="scope.row.fullname" @click="getGrade(scope.row.l_id)"></el-button>
+              <el-button type="text" v-text="scope.row.fullname" @click="getGrade(scope.row.l_id,scope.row.schoolnum,scope.row.fullname)"></el-button>
             </template>
           </el-table-column>
           <el-table-column prop="schoolnum" label="校号" width="180">
@@ -138,8 +140,11 @@ export default {
   },
   methods: {
     // 跳转成绩编辑列表
-    getGrade(l_id) {
-      this.$router.push({ path: '/class/grade', query: { l_id: l_id }})
+    getGrade(l_id, schoolnum, fullname) {
+      this.$router.push({
+        path: '/class/grade',
+        query: { l_id: l_id, schoolnum: schoolnum, fullname: fullname }
+      })
     },
     getData() {
       const param = {

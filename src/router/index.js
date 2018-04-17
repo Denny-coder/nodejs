@@ -59,17 +59,18 @@ export const asyncRouterMap = [
     meta: { title: '成绩管理', icon: 'example', roles: ['student'] },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '考试成绩', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '考证成绩', icon: 'tree' }
+        path: 'grade',
+        name: 'Grade',
+        // hidden: true,
+        component: () => import('@/views/class/grade'),
+        meta: { title: '成绩管理', icon: 'form' }
       }
+      // {
+      //   path: 'tree',
+      //   name: 'Tree',
+      //   component: () => import('@/views/tree/index'),
+      //   meta: { title: '证书管理', icon: 'tree' }
+      // }
     ]
   },
   {

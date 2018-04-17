@@ -30,7 +30,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="专业：" prop="major">
-            <el-select v-show="isShow" v-model="form.major" placeholder="请选择">
+            <el-select v-show="isShow" :disabled="true" v-model="form.major" placeholder="请选择">
               <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
@@ -43,7 +43,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="班级：" prop="classes">
+          <el-form-item label="班级：" :disabled="true" prop="classes">
             <el-input v-show="isShow" v-model="form.classes">
             </el-input>
             <span v-show="!isShow" v-text="form.classes"></span>

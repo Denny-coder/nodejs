@@ -80,6 +80,7 @@ router.get('/user/info', function(req, res) {
         res.send({ code: 700, msg: 'token 验证失败' })
         return
       } else {
+        console.log(doc)
         res.send({
           code: 200,
           data: {
