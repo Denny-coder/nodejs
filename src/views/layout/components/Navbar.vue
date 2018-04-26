@@ -48,6 +48,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { changePwd } from '@/api/login'
 
 export default {
   data() {
@@ -108,7 +109,7 @@ export default {
     Hamburger
   },
   computed: {
-    ...mapGetters(['sidebar'])
+    ...mapGetters(['sidebar', 'l_id'])
   },
   methods: {
     toggleSideBar() {
@@ -123,11 +124,30 @@ export default {
       this.dialogVisible = true
     },
     submitChange() {
+      const _this = this
       this.$refs['form'].validate(valid => {
         if (valid) {
-          // this.$store.dispatch('FedLogOut').then(() => {
-          //   location.reload() // 为了重新实例化vue-router对象 避免bug
-          // })
+          const para = {
+            originpwd: this.form.originpwd,
+            pwd: this.form.newpwd,
+            _id: this.l_id
+          }
+          changePwd(para)
+            .then(response => {
+              this.dialogVisible = false
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+              setTimeout(() => {
+                _this.$store.dispatch('FedLogOut').then(() => {
+                  location.reload() // 为了重新实例化vue-router对象 避免bug
+                })
+              }, 1000)
+            })
+            .catch(err => {
+              console.log(err)
+            })
         }
       })
     }

@@ -61,5 +61,4 @@ var token = {
 
 }
 module.exports = token
-1523543149825
 

@@ -8,7 +8,6 @@ const token = require('../token/token')
 router.use(function timeLog(req, res, next) {
   // 白名单不验证token
   if (req._parsedUrl.pathname === '/user/login') {
-    console.log(new Date())
     next()
   } else {
     const tokenCheck = token.checkToken(req.headers['x-token'])
@@ -95,7 +94,6 @@ router.get('/user/info', function(req, res) {
   })
 })
 
-// 定义 about 页面的路由
 router.post('/user/register', function(req, res) {
   // 对发来的注册数据进行验证
   const account = req.body.account
@@ -155,5 +153,26 @@ router.post('/user/register', function(req, res) {
   // 返回注册状态
   // res.send(JSON.stringify({code: 200, data: {account: 'guojcres', pass: 111111}}))
 })
-
+router.post('/user/changePwd', function(req, res) {
+  const originpwd = req.body.originpwd
+  const pwd = req.body.pwd
+  const _id = req.body._id
+  // 对发来的注册数据进行验证
+  db.Login.update(
+    { _id: _id, pwd: originpwd },
+    { $set: { pwd: pwd }},
+    function(err, result) {
+      console.log(result)
+      if (err) {
+        console.log(err)
+      } else {
+        if (result.nModified) {
+          res.send({ code: 200, msg: '修改成功', result: {}})
+        } else {
+          res.send({ code: 405, msg: '原密码错误', result: {}})
+        }
+      }
+    }
+  )
+})
 module.exports = router

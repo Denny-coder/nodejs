@@ -20,6 +20,15 @@ export function register(params) {
     }
   })
 }
+export function changePwd(params) {
+  return request({
+    url: '/api/user/changePwd',
+    method: 'post',
+    data: {
+      ...params
+    }
+  })
+}
 // export function login(username, password) {
 //   return request({
 //     url: '/user/login',

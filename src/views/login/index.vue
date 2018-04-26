@@ -26,8 +26,8 @@
         </el-button> -->
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">account: admin</span>
-        <span> password: admin</span>
+        <!-- <span style="margin-right:20px;">account: admin</span>
+        <span> password: admin</span> -->
       </div>
     </el-form>
   </div>
@@ -95,42 +95,6 @@ export default {
         }
       })
     }
-    // login() {
-    //   const _this = this
-    //   this.$router.push({ path: '/' })
-    //   // 响应成功回调
-    //   const params = {
-    //     username: this.loginForm.username,
-    //     password: this.loginForm.password
-    //   }
-    //   // 获取已有账号密码
-    //   this.$http
-    //     .get('/api/user/login', {
-    //       params
-    //     })
-    //     .then(response => {
-    //       if (response.data.code === 200) {
-    //         debugger
-    //         return _this.$router.push({ path: '/' })
-    //       }
-    //       console.log(response)
-
-    //       // 创建一个账号密码
-    //       return this.$http
-    //         .post('/api/user/register', params)
-    //         .then(response => {
-    //           if (response.data.code === 200) {
-    //             this.$router.push({ path: '/' })
-    //           }
-    //         })
-    //         .catch(reject => {
-    //           console.log(reject)
-    //         })
-    //     })
-    //     .catch(reject => {
-    //       console.log(reject)
-    //     })
-    // }
   }
 }
 </script>
