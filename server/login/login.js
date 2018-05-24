@@ -150,8 +150,6 @@ router.post('/user/register', function(req, res) {
       }
     }
   })
-  // 返回注册状态
-  // res.send(JSON.stringify({code: 200, data: {account: 'guojcres', pass: 111111}}))
 })
 router.post('/user/changePwd', function(req, res) {
   const originpwd = req.body.originpwd
