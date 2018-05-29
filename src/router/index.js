@@ -82,7 +82,7 @@ export const asyncRouterMap = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: '课程管理', icon: 'form' }
+        meta: { title: '课程表管理', icon: 'form' }
       }
     ]
   },
@@ -122,7 +122,7 @@ export const asyncRouterMap = [
         path: 'course',
         name: 'Course',
         component: () => import('@/views/form/index'),
-        meta: { title: '课程管理', icon: 'form' }
+        meta: { title: '课程表管理', icon: 'form' }
       },
       {
         path: 'grade',

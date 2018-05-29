@@ -39,11 +39,11 @@
       <el-col :span="24">
         <!--表格标题-->
         <el-table stripe :data="tableData" border style="width: 100%">
-                 <el-table-column type="expand">
+          <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="right" label-width="130px" inline class="demo-table-expand">
                 <el-form-item label="性别：">
-                  <span>{{ props.row.sex }}</span>
+                  <span v-text="props.row.sex?'男':'女'"></span>
                 </el-form-item>
                 <el-form-item label="民族：">
                   <span>{{ props.row.nation }}</span>
@@ -100,12 +100,12 @@
         <el-button type="primary" @click="del">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="工号">
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="40%" @close="beforeClose">
+      <el-form ref="loginForm" :model="form" label-width="80px" :rules="loginRules">
+        <el-form-item label="工号" prop="account">
           <el-input v-model="form.account"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item label="密码" prop="pwd">
           <el-input v-model="form.pwd"></el-input>
         </el-form-item>
         <el-form-item label="角色">
@@ -114,7 +114,7 @@
             <el-radio label="teach">教师</el-radio>
           </el-radio-group>
         </el-form-item>
-         <el-form-item class="modal" label="专业：" prop="major">
+        <el-form-item class="modal" label="专业：" prop="major">
           <el-select v-model="form.major" placeholder="请选择">
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
@@ -141,7 +141,28 @@ import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
-  data() {
+
+  data () {
+    const validatePass = (rule, value, callback) => {
+      if (value.length < 5) {
+        callback(new Error('密码不能小于五位'))
+      } else {
+        callback()
+      }
+    }
+    const validateClasses = (rule, value, callback) => {
+      if (value === '' || value === undefined) {
+        callback(new Error('班级号不得为空'))
+      } else if (!/^[0-9]*$/.test(value)) {
+        callback(new Error('班级号只能为数字'))
+      } else if (value.length < 4) {
+        callback(new Error('班级号不得小于四位'))
+      } else if (value.length > 6) {
+        callback(new Error('班级号不得大于六位'))
+      } else {
+        callback()
+      }
+    }
     return {
       formInline: {
         major: '',
@@ -156,6 +177,12 @@ export default {
         classes: '',
         pwd: ''
       },
+      loginRules: {
+        account: [{ required: true, trigger: 'blur', message: '请输入工号', }],
+        major: [{ required: true, trigger: 'change', message: '请选择专业', }],
+        pwd: [{ required: true, trigger: 'blur', validator: validatePass }],
+        classes: [{ required: true, trigger: 'blur', validator: validateClasses }],
+      },
       options: [], // 专业
       sels: [], // 专业
       tableData: [],
@@ -169,7 +196,13 @@ export default {
     }
   },
   methods: {
-    getData() {
+    resetFormModal () {
+      this.$refs['loginForm'].resetFields();
+    },
+    beforeClose () {
+      this.resetFormModal()
+    },
+    getData () {
       const param = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
@@ -184,7 +217,7 @@ export default {
           console.log(err)
         })
     },
-    del: function() {
+    del: function () {
       delTeach({ l_id: this.deletId })
         .then(response => {
           Message({
@@ -200,7 +233,7 @@ export default {
         })
     },
     // 添加学生
-    addTeach: function() {
+    addTeach: function () {
       const para = {
         roles: this.form.roles.split(','),
         account: this.form.account,
@@ -208,20 +241,26 @@ export default {
         classes: this.form.classes,
         pwd: this.form.pwd
       }
-      register(para)
-        .then(response => {
-          Message({
-            message: response.msg + '请告知教师 ',
-            type: 'success',
-            duration: 5 * 1000
-          })
-          this.dialogVisible = false
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          register(para)
+            .then(response => {
+              Message({
+                message: response.msg + '请告知教师 ',
+                type: 'success',
+                duration: 5 * 1000
+              })
+              this.dialogVisible = false
+              this.resetFormModal()
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
+      })
+
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.pageNum = 1 // 页数
       this.pageSize = 5 // 每页条数
       this.formInline.major = ''
@@ -229,19 +268,19 @@ export default {
       this.getData()
     },
     // 分页操作
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.pageNum = val
       this.getData()
     },
     // 每页显示的条数
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.pageSize = val
       this.getData()
     },
     // handleSelectionChange(val) {
     //   this.sels = val
     // },
-    getMajorList() {
+    getMajorList () {
       getmajor()
         .then(response => {
           this.options = response.result
@@ -251,8 +290,8 @@ export default {
         })
     }
   },
-  mounted: function() {},
-  created: function() {
+  mounted: function () { },
+  created: function () {
     this.getMajorList()
     this.getData()
   },

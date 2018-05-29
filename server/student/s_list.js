@@ -55,7 +55,6 @@ router.post('/list/getstudent', function(req, res) {
         } else {
           db.S_info.find(queryFilter, function(err, doc) {
             if (err) {
-              console.log(err)
             } else {
               const jsonArray = {
                 code: 200,

@@ -64,7 +64,7 @@ const user = {
             const data = response.data
             setToken(data.token)
             Cookies.set('L_ID', data.l_id)
-            Cookies.set('roles', data.roles.join(''))
+            // Cookies.set('roles', data.roles.join(''))
             commit('SET_TOKEN', data.token)
             commit('SET_NAME', data.name)
             commit('SET_L_ID', data.l_id)

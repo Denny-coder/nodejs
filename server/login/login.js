@@ -79,7 +79,6 @@ router.get('/user/info', function(req, res) {
         res.send({ code: 700, msg: 'token 验证失败' })
         return
       } else {
-        console.log(doc)
         res.send({
           code: 200,
           data: {
@@ -160,9 +159,7 @@ router.post('/user/changePwd', function(req, res) {
     { _id: _id, pwd: originpwd },
     { $set: { pwd: pwd }},
     function(err, result) {
-      console.log(result)
       if (err) {
-        console.log(err)
       } else {
         if (result.nModified) {
           res.send({ code: 200, msg: '修改成功', result: {}})

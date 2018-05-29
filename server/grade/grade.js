@@ -98,7 +98,6 @@ router.post('/grade/getGrade', function(req, res) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
     } else {
-      console.log(doc)
       if (doc) {
         res.send({ code: 200, msg: '', result: doc })
         return

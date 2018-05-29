@@ -88,8 +88,6 @@ router.post('/course/getCourse', function(req, res) {
     res.send({ code: 405, msg: '专业' })
     return
   }
-  console.log(semester)
-  console.log(year)
   db.Course.findOne(
     { major: major, classes: classes, semester: semester, year: year },
     function(err, doc) {

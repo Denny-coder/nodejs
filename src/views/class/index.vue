@@ -70,7 +70,7 @@
             <template slot-scope="props">
               <el-form label-position="right" label-width="130px" inline class="demo-table-expand">
                 <el-form-item label="性别：">
-                  <span>{{ props.row.sex }}</span>
+                  <span v-text="props.row.sex?'男':'女'"></span>
                 </el-form-item>
                 <el-form-item label="民族：">
                   <span>{{ props.row.nation }}</span>

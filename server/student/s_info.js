@@ -150,7 +150,6 @@ router.post('/info/getInfo', function(req, res) {
               })
               return
             } else {
-              console.log(response)
               res.send({
                 code: 200,
                 msg: '',
