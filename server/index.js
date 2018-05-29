@@ -1,16 +1,16 @@
-const express = require("express")
+const express = require('express')
 const app = express()
 // const cors = require('cors')
 // const api = require('./api')
-var login = require("./login/login")
-var enumeration = require("./enum/enum")
-var t_info = require("./teach/t_info")
-var t_list = require("./teach/t_list")
-var s_list = require("./student/s_list")
-var s_info = require("./student/s_info")
-var course = require("./course/course")
-var grade = require("./grade/grade")
-var session = require("express-session")
+var login = require('./login/login')
+var enumeration = require('./enum/enum')
+var t_info = require('./teach/t_info')
+var t_list = require('./teach/t_list')
+var s_list = require('./student/s_list')
+var s_info = require('./student/s_info')
+var course = require('./course/course')
+var grade = require('./grade/grade')
+// var session = require('express-session')
 // app.all('*', function(req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*')
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -20,7 +20,7 @@ var session = require("express-session")
 //   next()
 // })
 // 引入处理post数据的模块
-const bodyParser = require("body-parser")
+const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -36,15 +36,15 @@ app.use(t_info) // 获取老师信息
 app.use(t_list) // 获取老师列表
 app.use(course) // 课程
 app.use(grade) // 成绩
-app.use(
-  session({
-    secret: "zhengke",
-    resave: false,
-    saveUninitialized: true,
-    rolling: 1000 * 60 * 30,
-    cookie: { maxAge: 1000 * 60 * 30 }
-  })
-)
+// app.use(
+//   session({
+//     secret: 'zhengke',
+//     resave: false,
+//     saveUninitialized: true,
+//     rolling: 1000 * 60 * 30,
+//     cookie: { maxAge: 1000 * 60 * 30 }
+//   })
+// )
 
 app.listen(8088)
-console.log("success listen…………")
+console.log('success listen…………')

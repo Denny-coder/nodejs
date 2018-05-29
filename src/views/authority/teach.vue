@@ -141,8 +141,7 @@ import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
-
-  data () {
+  data() {
     const validatePass = (rule, value, callback) => {
       if (value.length < 5) {
         callback(new Error('密码不能小于五位'))
@@ -178,10 +177,12 @@ export default {
         pwd: ''
       },
       loginRules: {
-        account: [{ required: true, trigger: 'blur', message: '请输入工号', }],
-        major: [{ required: true, trigger: 'change', message: '请选择专业', }],
+        account: [{ required: true, trigger: 'blur', message: '请输入工号' }],
+        major: [{ required: true, trigger: 'change', message: '请选择专业' }],
         pwd: [{ required: true, trigger: 'blur', validator: validatePass }],
-        classes: [{ required: true, trigger: 'blur', validator: validateClasses }],
+        classes: [
+          { required: true, trigger: 'blur', validator: validateClasses }
+        ]
       },
       options: [], // 专业
       sels: [], // 专业
@@ -196,13 +197,13 @@ export default {
     }
   },
   methods: {
-    resetFormModal () {
-      this.$refs['loginForm'].resetFields();
+    resetFormModal() {
+      this.$refs['loginForm'].resetFields()
     },
-    beforeClose () {
+    beforeClose() {
       this.resetFormModal()
     },
-    getData () {
+    getData() {
       const param = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
@@ -217,7 +218,7 @@ export default {
           console.log(err)
         })
     },
-    del: function () {
+    del: function() {
       delTeach({ l_id: this.deletId })
         .then(response => {
           Message({
@@ -233,7 +234,7 @@ export default {
         })
     },
     // 添加学生
-    addTeach: function () {
+    addTeach: function() {
       const para = {
         roles: this.form.roles.split(','),
         account: this.form.account,
@@ -258,9 +259,8 @@ export default {
             })
         }
       })
-
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.pageNum = 1 // 页数
       this.pageSize = 5 // 每页条数
       this.formInline.major = ''
@@ -268,19 +268,19 @@ export default {
       this.getData()
     },
     // 分页操作
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.pageNum = val
       this.getData()
     },
     // 每页显示的条数
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageSize = val
       this.getData()
     },
     // handleSelectionChange(val) {
     //   this.sels = val
     // },
-    getMajorList () {
+    getMajorList() {
       getmajor()
         .then(response => {
           this.options = response.result
@@ -290,8 +290,8 @@ export default {
         })
     }
   },
-  mounted: function () { },
-  created: function () {
+  mounted: function() {},
+  created: function() {
     this.getMajorList()
     this.getData()
   },

@@ -154,12 +154,16 @@ router.post('/user/changePwd', function(req, res) {
   const originpwd = req.body.originpwd
   const pwd = req.body.pwd
   const _id = req.body._id
+  if (pwd === originpwd) {
+    return res.send({ code: 405, msg: '新密码不可与原名密码相同' })
+  }
   // 对发来的注册数据进行验证
   db.Login.update(
     { _id: _id, pwd: originpwd },
     { $set: { pwd: pwd }},
     function(err, result) {
       if (err) {
+        console.log(err)
       } else {
         if (result.nModified) {
           res.send({ code: 200, msg: '修改成功', result: {}})

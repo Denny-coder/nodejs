@@ -97,7 +97,7 @@
             <el-button v-if="isShow&&has==='0'" type="primary" @click="onSubmit">保存</el-button>
             <el-button v-if="isShow&&is_edit==='1'" type="primary" @click="onSubmitUpdate">保存</el-button>
             <el-button v-if="has===0" @click="resetForm('form')">重置</el-button>
-            <el-button v-if="has===1&&isShow" @click="isShow=false">取消</el-button>
+            <el-button v-if="has===1&&isShow" @click="isShow=false,getInfomation(),resetForm('form')">取消</el-button>
             <el-button v-if="!isShow&&is_edit==='1'" type="primary" @click="isShow=true">编辑</el-button>
           </el-form-item>
         </el-col>
@@ -115,6 +115,37 @@ import { mapGetters } from 'vuex'
 
 export default {
   data() {
+    const validateEmail = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请填写邮箱地址'))
+      } else if (
+        !/^([a-zA-Z0-9_-]{1,16})@([a-zA-Z0-9]{1,9})(\.[a-zA-Z0-9]{1,9}){0,3}(\.(?:com|net|org|edu|gov|mil|cn|us)){1,4}$/.test(
+          value
+        )
+      ) {
+        callback(new Error('请填写正确的邮箱地址'))
+      } else {
+        callback()
+      }
+    }
+    const validatePhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请填写手机号'))
+      } else if (!/^[1][3,4,5,6,7,8][0-9]{9}$/.test(value)) {
+        callback(new Error('请填写正确的手机号'))
+      } else {
+        callback()
+      }
+    }
+    const validateId = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请填写身份证号'))
+      } else if (!/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/.test(value)) {
+        callback(new Error('请填写正确的身份证号'))
+      } else {
+        callback()
+      }
+    }
     return {
       has: Number, // 是否填写
       isShow: false,
@@ -148,11 +179,9 @@ export default {
         ],
         nation: [{ required: true, message: '请填写民族', trigger: 'blur' }],
         fullname: [{ required: true, message: '请填写姓名', trigger: 'blur' }],
-        phone: [{ required: true, message: '请填写手机号', trigger: 'blur' }],
-        email: [{ required: true, message: '请填写邮箱', trigger: 'blur' }],
-        idcard: [
-          { required: true, message: '请填写身份证号', trigger: 'blur' }
-        ],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
+        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
+        idcard: [{ required: true, trigger: 'blur', validator: validateId }],
         origin: [{ required: true, message: '请填写籍贯', trigger: 'blur' }],
         age: [{ required: true, message: '请填写年龄', trigger: 'blur' }],
         classes: [{ required: true, message: '请填写班级', trigger: 'blur' }],
