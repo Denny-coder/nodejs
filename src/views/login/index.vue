@@ -34,21 +34,23 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+// import { isvalidUsername } from '@/utils/validate'
 
 export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
+      if (!value) {
         callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
+      if (value.length === 0) {
+        callback(new Error('密码不能为空'))
+      } else if (value.length < 6) {
+        callback(new Error('密码不能小于6位'))
       } else {
         callback()
       }
