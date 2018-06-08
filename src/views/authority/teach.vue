@@ -103,10 +103,10 @@
     <el-dialog title="提示" :visible.sync="dialogVisible" width="40%" @close="beforeClose">
       <el-form ref="loginForm" :model="form" label-width="80px" :rules="loginRules">
         <el-form-item label="工号" prop="account">
-          <el-input v-model="form.account"></el-input>
+          <el-input v-model="form.account"  placeholder="请输入工号"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="form.pwd"></el-input>
+          <el-input v-model="form.pwd" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="角色">
           <el-radio-group :disabled="true" v-model="form.roles">
@@ -120,8 +120,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="班级：" prop="classes">
-          <el-input v-model="form.classes">
+        <el-form-item label="班级" prop="classes">
+          <el-input v-model="form.classes" placeholder="请输入班级">
           </el-input>
         </el-form-item>
       </el-form>
@@ -143,8 +143,8 @@ import { Message } from 'element-ui'
 export default {
   data() {
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于五位'))
+      if (value.length < 6) {
+        callback(new Error('密码不能小于六位'))
       } else {
         callback()
       }

@@ -17,7 +17,8 @@ export function updateCourse(params) {
     method: 'post',
     data: {
       course: params.course,
-      l_id: params.l_id
+      major: params.major,
+      classes: params.classes
     }
   })
 }

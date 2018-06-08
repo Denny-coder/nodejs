@@ -43,8 +43,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="班级：" :disabled="true" prop="classes">
-            <el-input v-show="isShow" v-model="form.classes">
+          <el-form-item label="班级："prop="classes">
+            <el-input v-show="isShow" v-model="form.classes"  :disabled="true" >
             </el-input>
             <span v-show="!isShow" v-text="form.classes"></span>
           </el-form-item>
@@ -186,8 +186,7 @@ export default {
         age: [{ required: true, message: '请填写年龄', trigger: 'blur' }],
         classes: [{ required: true, message: '请填写班级', trigger: 'blur' }],
         schoolnum: [
-          { required: true, message: '请填写校号', trigger: 'blur' },
-          { min: 7, max: 11, message: '长度在 7 到 11 个字符', trigger: 'blur' }
+          { required: true, message: '请填写校号', trigger: 'blur' }
         ]
       }
     }
@@ -204,7 +203,7 @@ export default {
                 type: 'success',
                 duration: 5 * 1000
               })
-              this.isShow = false
+              this.getInfomation()
             })
             .catch(err => {
               console.log(err)

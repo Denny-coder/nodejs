@@ -2,7 +2,8 @@
   <el-row class="m-100">
     <el-col :span="24" class="m-b-20" v-if="roles[0] === 'teach'">
       <el-button type="primary" v-show="isEdit" @click="isEdit=false">编辑</el-button>
-      <el-button type="primary" v-show="!isEdit" @click="editSubmit">保存</el-button>
+      <el-button type="primary" v-show="!isEdit&&!have" @click="editSubmit">保存</el-button>
+      <el-button type="primary" v-show="!isEdit&&have" @click="updateCourse">保存</el-button>
     </el-col>
     <el-col :span="24">
       <el-table border :data="course" style="width: 100%">
@@ -89,7 +90,8 @@ export default {
         }
       ],
       major: '',
-      classes: ''
+      classes: '',
+      have: false
     }
   },
   methods: {
@@ -102,6 +104,7 @@ export default {
       setCourse(para)
         .then(response => {
           this.isEdit = true
+          this.have = true
           Message({
             message: response.msg,
             type: 'success',
@@ -141,8 +144,11 @@ export default {
       }
       getCourse(para)
         .then(response => {
-          if (response.result.course.length) {
+          if (response.flag) {
+            this.have = true
             this.course = response.result.course
+          } else {
+            this.have = false
           }
         })
         .catch(err => {
@@ -150,10 +156,15 @@ export default {
         })
     },
     updateCourse() {
-      updateCourse(this.l_id)
+      const para = {
+        major: this.major,
+        classes: this.classes,
+        course: this.course
+
+      }
+      updateCourse(para)
         .then(response => {
-          this.major = response.result.major
-          this.classes = response.result.classes
+          this.isEdit = true
         })
         .catch(err => {
           console.log(err)

@@ -46,14 +46,19 @@ router.post('/course/setCourse', function(req, res) {
 })
 router.post('/course/updateCourse', function(req, res) {
   // 对发来的注册数据进行验证
+  const major = req.body.major
+  const classes = req.body.classes
   const course = req.body.course
-  const l_id = req.body.l_id
-  if (!l_id) {
-    res.send({ code: 600, msg: '更新失败' })
+  if (!major) {
+    res.send({ code: 600, msg: '专业 不能为空！' })
+    return
+  }
+  if (!classes) {
+    res.send({ code: 600, msg: '班级 不能为空！' })
     return
   }
   db.Course.update(
-    { _id: l_id },
+    { major: major, classes: classes },
     {
       $set: {
         course: course // 专业
@@ -96,10 +101,10 @@ router.post('/course/getCourse', function(req, res) {
         return
       } else {
         if (doc) {
-          res.send({ code: 200, msg: '', result: doc })
+          res.send({ code: 200, msg: '', flag: true, result: doc })
           return
         } else {
-          res.send({ code: 200, msg: '查询为空', result: [] })
+          res.send({ code: 200, flag: false, msg: '查询为空', result: [] })
         }
       }
     }
