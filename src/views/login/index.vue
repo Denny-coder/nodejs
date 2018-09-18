@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px" class="card-box login-form">
-      <h3 class="title">平台登录</h3>
+      <h3 class="title">学生信息管理系统</h3>
       <el-form-item prop="account">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
@@ -102,9 +102,9 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-$bg: #2d3a4b;
+$bg: #fff;
 $dark_gray: #889aa4;
-$light_gray: #eee;
+$light_gray: #409EFF;
 
 .login-container {
   position: fixed;

@@ -114,7 +114,7 @@
             <el-radio label="teach">教师</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item class="modal" label="专业：" prop="major">
+        <el-form-item class="modal" label="专业" prop="major">
           <el-select v-model="form.major" placeholder="请选择">
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
             </el-option>

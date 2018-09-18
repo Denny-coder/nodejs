@@ -20,7 +20,7 @@
           </el-table-column>
           <el-table-column prop="major" label="专业" width="180">
             <template slot-scope="scope">
-              <span v-text="scope.row.major"></span>
+              <span  v-text="scope.row.major==='1'?'信息管理':'网络工程'"></span>
             </template>
           </el-table-column>
           <el-table-column prop="classes" label="班级" width="180">
