@@ -16,6 +16,7 @@
     "axios": "0.17.1",
     "element-ui": "2.0.8",
     "express": "^4.16.2",
+    "formidable": "^1.2.1",
     "js-cookie": "2.2.0",
     "mongoose": "^5.0.7",
     "normalize.css": "7.0.0",

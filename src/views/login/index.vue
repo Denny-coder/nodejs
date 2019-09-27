@@ -1,24 +1,53 @@
 <template>
   <div class="login-container">
-    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px" class="card-box login-form">
+    <el-form
+      autoComplete="on"
+      :model="loginForm"
+      :rules="loginRules"
+      ref="loginForm"
+      label-position="left"
+      label-width="0px"
+      class="card-box login-form"
+    >
       <h3 class="title">学生信息管理系统</h3>
       <el-form-item prop="account">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="account" />
+        <el-input
+          name="account"
+          type="text"
+          v-model="loginForm.account"
+          autoComplete="on"
+          placeholder="account"
+        />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password"></svg-icon>
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="login" v-model="loginForm.password" autoComplete="on" placeholder="password"></el-input>
-        <span class="show-pwd" @click="showPwd">
+        <el-input
+          name="password"
+          :type="pwdType"
+          @keyup.enter.native="login"
+          v-model="loginForm.password"
+          autoComplete="on"
+          placeholder="password"
+        ></el-input>
+        <span
+          class="show-pwd"
+          @click="showPwd"
+        >
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="login">
+        <el-button
+          type="primary"
+          style="width:100%;"
+          :loading="loading"
+          @click.native.prevent="login"
+        >
           Sign in
         </el-button>
         <!-- <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="test">
@@ -37,74 +66,75 @@
 // import { isvalidUsername } from '@/utils/validate'
 
 export default {
-  name: 'login',
+  name: "login",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入正确的用户名'))
+        callback(new Error("请输入正确的用户名"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePass = (rule, value, callback) => {
       if (value.length === 0) {
-        callback(new Error('密码不能为空'))
+        callback(new Error("密码不能为空"));
       } else if (value.length < 6) {
-        callback(new Error('密码不能小于6位'))
+        callback(new Error("密码不能小于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        account: 'admin',
-        password: 'admin'
+        account: "admin",
+        password: "admin"
       },
       loginRules: {
         account: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername }
         ],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        password: [{ required: true, trigger: "blur", validator: validatePass }]
       },
       loading: false,
-      pwdType: 'password'
-    }
+      pwdType: "password"
+    };
   },
   methods: {
+
     showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
+      if (this.pwdType === "password") {
+        this.pwdType = "";
       } else {
-        this.pwdType = 'password'
+        this.pwdType = "password";
       }
     },
     login() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
-            .dispatch('Login', this.loginForm)
+            .dispatch("Login", this.loginForm)
             .then(() => {
-              this.loading = false
-              this.$router.push({ path: '/' })
+              this.loading = false;
+              this.$router.push({ path: "/" });
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
 $bg: #fff;
 $dark_gray: #889aa4;
-$light_gray: #409EFF;
+$light_gray: #409eff;
 
 .login-container {
   position: fixed;
@@ -112,8 +142,8 @@ $light_gray: #409EFF;
   width: 100%;
   background-color: $bg;
   input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
-    -webkit-text-fill-color: #fff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #e5e5e5 inset !important;
+    -webkit-text-fill-color: #409eff !important;
   }
   input {
     background: transparent;

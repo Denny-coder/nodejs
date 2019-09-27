@@ -7,7 +7,7 @@ const token = require('../token/token')
 // 该路由使用的中间件
 router.use(function timeLog(req, res, next) {
   // 白名单不验证token
-  if (req._parsedUrl.pathname === '/user/login') {
+  if (req._parsedUrl.pathname === '/user/login' || /upload/.test(req._parsedUrl.pathname) || /public/.test(req._parsedUrl.pathname)) {
     next()
   } else {
     const tokenCheck = token.checkToken(req.headers['x-token'])
@@ -21,7 +21,7 @@ router.use(function timeLog(req, res, next) {
   }
 })
 // 定义网站主页的路由
-router.get('/user/login', function(req, res) {
+router.get('/user/login', function (req, res) {
   // 对发来的登录数据进行验证
   if (!req.query.account) {
     res.send({ code: 600, msg: 'account 不能为空！' })
@@ -31,7 +31,7 @@ router.get('/user/login', function(req, res) {
     res.send({ code: 600, msg: 'pwd 不能为空！' })
     return
   }
-  db.Login.findOne({ account: req.query.account, pwd: req.query.pwd }, function(
+  db.Login.findOne({ account: req.query.account, pwd: req.query.pwd }, function (
     err,
     doc
   ) {
@@ -65,12 +65,12 @@ router.get('/user/login', function(req, res) {
   })
 })
 // 定义网站主页的路由
-router.get('/user/info', function(req, res) {
+router.get('/user/info', function (req, res) {
   const tokenObj = token.decodeToken(req.headers['x-token'])
   const account = tokenObj.payload.data.account
   const pwd = tokenObj.payload.data.pwd
   // 对发来的登录数据进行验证
-  db.Login.findOne({ account: account, pwd: pwd }, function(err, doc) {
+  db.Login.findOne({ account: account, pwd: pwd }, function (err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
@@ -93,7 +93,7 @@ router.get('/user/info', function(req, res) {
   })
 })
 
-router.post('/user/register', function(req, res) {
+router.post('/user/register', function (req, res) {
   // 对发来的注册数据进行验证
   const account = req.body.account
   const pwd = req.body.pwd
@@ -117,7 +117,7 @@ router.post('/user/register', function(req, res) {
     return
   }
   // 是否存在账号
-  db.Login.findOne({ account: account }, function(err, doc) {
+  db.Login.findOne({ account: account }, function (err, doc) {
     if (err) {
       res.send({ code: 700, msg: '查询出错：' + err })
       return
@@ -134,7 +134,7 @@ router.post('/user/register', function(req, res) {
             major: major,
             pwd: pwd
           },
-          function(err, doc) {
+          function (err, doc) {
             if (err) {
               res.end('注册失败:' + err)
             } else {
@@ -150,7 +150,7 @@ router.post('/user/register', function(req, res) {
     }
   })
 })
-router.post('/user/changePwd', function(req, res) {
+router.post('/user/changePwd', function (req, res) {
   const originpwd = req.body.originpwd
   const pwd = req.body.pwd
   const _id = req.body._id
@@ -160,15 +160,15 @@ router.post('/user/changePwd', function(req, res) {
   // 对发来的注册数据进行验证
   db.Login.update(
     { _id: _id, pwd: originpwd },
-    { $set: { pwd: pwd }},
-    function(err, result) {
+    { $set: { pwd: pwd } },
+    function (err, result) {
       if (err) {
         console.log(err)
       } else {
         if (result.nModified) {
-          res.send({ code: 200, msg: '修改成功', result: {}})
+          res.send({ code: 200, msg: '修改成功', result: {} })
         } else {
-          res.send({ code: 405, msg: '原密码错误', result: {}})
+          res.send({ code: 405, msg: '原密码错误', result: {} })
         }
       }
     }

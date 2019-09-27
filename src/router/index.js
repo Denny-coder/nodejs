@@ -41,6 +41,18 @@ export const constantRouterMap = [
         meta: { title: '首页', icon: 'example' }
       }
     ]
+  },
+  {
+    path: '/upload',
+    component: Layout,
+    name: 'upload',
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/upload/index'),
+        meta: { title: '上传', icon: 'example' }
+      }
+    ]
   }
 ]
 

@@ -18,7 +18,7 @@ import axios from 'axios'
 Vue.prototype.$http = axios
 
 Vue.use(ElementUI)// , { locale }
-
+Vue.prototype.$ImgUpload=process.env.BASE_API
 Vue.config.productionTip = false
 
 new Vue({

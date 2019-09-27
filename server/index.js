@@ -5,6 +5,7 @@ const app = express()
 // const cors = require('cors')
 // const api = require('./api')
 var login = require('./login/login')
+var upload = require('./upload/upload')
 var enumeration = require('./enum/enum')
 var t_info = require('./teach/t_info')
 var t_list = require('./teach/t_list')
@@ -38,6 +39,7 @@ app.use(t_info) // 获取老师信息
 app.use(t_list) // 获取老师列表
 app.use(course) // 课程
 app.use(grade) // 成绩
+app.use(upload) // 上传
 // app.use(
 //   session({
 //     secret: 'zhengke',
@@ -47,11 +49,10 @@ app.use(grade) // 成绩
 //     cookie: { maxAge: 1000 * 60 * 30 }
 //   })
 // )
-app.use(express.static(path.resolve(__dirname, './dist')))
-
-app.get('*', function(req, res) {
-  const html = fs.readFileSync(path.resolve(__dirname, './dist/index.html'), 'utf-8')
-  res.send(html)
-})
+app.use(express.static(path.resolve(__dirname, './public')))
+// app.get('*', function (req, res) {
+//   const html = fs.readFileSync(path.resolve(__dirname, './dist/index.html'), 'utf-8')
+//   res.send(html)
+// })
 app.listen(8008)
 console.log('success listen…………')
