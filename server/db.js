@@ -100,14 +100,20 @@ const gradeSchema = mongoose.Schema({
   year: String, // 学年
   classes: String // 班级
 })
+const bigFileSchema = mongoose.Schema({
+  fileName: String, // 文件名
+  fileMd5: String, // 文件MD5
+  fileFragNum: Number, // 文件分片数
+  fileComplete: { type: Boolean, default: false }, // 文件是否下载完成
+})
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost:12707/test_nodeVue')
+mongoose.connect('mongodb://localhost:27017/test_nodeVue')
 const database = mongoose.connection
-database.once('error', function(error) {
+database.once('error', function (error) {
   console.log('数据库test_nodeVue连接失败：' + error)
   return
 })
-database.once('open', function() {
+database.once('open', function () {
   console.log('数据库test_nodeVue连接成功')
 })
 
@@ -117,6 +123,7 @@ const db = {
   T_info: mongoose.model('T_info', t_infoSchema),
   Enum: mongoose.model('Enum', enumSchema),
   Course: mongoose.model('Course', coursechema),
+  File: mongoose.model('File', bigFileSchema),
   Grade: mongoose.model('Grade', gradeSchema)
 }
 
